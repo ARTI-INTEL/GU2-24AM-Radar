@@ -1,0 +1,64 @@
+<!-- settings.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings • 24AM Radar</title>
+  <link rel="stylesheet" href="../styles/style.css" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+
+<body class="auth-page">
+
+  <!-- Page title (same pattern as Register/Login) -->
+    <header class="navbar">
+        <div class="logo">24AMRadar</div>
+        <a href="map.html" class="settings">Back to map</a>
+    </header>
+
+  <div class="auth-wrap">
+
+    <!-- Big rounded panel (reuses your .card base styling) -->
+    <section class="card settings-panel">
+
+      <div class="settings-row">
+        <!-- Avatar -->
+        <div class="settings-avatar">
+          <i class='bx bx-user'></i>
+        </div>
+
+        <!-- Content -->
+        <div class="settings-content">
+          <div class="settings-welcome">Welcome to 24AM Radar Faiq.</div>
+
+          <div class="settings-actions">
+            <button type="button" class="primary-btn settings-btn">Change Password</button>
+            <button type="button" class="primary-btn settings-btn">Change Username</button>
+            <button type="button" class="primary-btn settings-btn" onclick="LogOut()">Log-out</button>
+          </div>
+
+          <div class="settings-selects">
+            <select id="refreshRate" name="refreshRate">
+              <option value="" selected disabled>Refresh Rate</option>
+              <option value="5">Every 5 seconds</option>
+              <option value="10">Every 10 seconds</option>
+              <option value="15">Every 15 seconds</option>
+              <option value="30">Every 30 seconds</option>
+              <option value="60">Every 60 seconds</option>
+            </select>
+
+            <select id="theme" name="theme">
+              <option value="" selected disabled>Change Theme</option>
+              <option value="dark">Dark</option>
+              <option value="light">Light</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="../scripts/script.js"></script>
+</body>
+</html>
