@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>24AM Radar</title>
+  <link rel="stylesheet" href="../styles/style.css">
+</head>
+<body class="auth-page">
+  <div class="auth-wrap">
+    <form class="card" style="width:320px;">
+        <div class="card-header">
+        <span>Change Password</span>
+        </div>
+
+        <!-- Uses your existing input style -->
+        <input type="password" placeholder="Old Password" required id="oldPass">
+        <input type="password" placeholder="New Password" required id="newPass">
+
+        <button class="primary-btn" type="submit" onclick="ChangePassword()">Change Password</button>
+        <button class="primary-btn" onclick="window.location.href='map.html'">Cancel</button>
+    </form>
+  </div>
+
+  <script src="../scripts/script.js"></script>
+</body>
+</html>

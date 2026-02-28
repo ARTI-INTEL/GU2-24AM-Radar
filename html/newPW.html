@@ -3,21 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>24AM Radar</title>
+  <title>Register • 24AM Radar</title>
   <link rel="stylesheet" href="../styles/style.css">
 </head>
 <body class="auth-page">
+
+  <div class="auth-title">Register to 24AM Radar</div>
+
   <div class="auth-wrap">
     <form class="card" style="width:320px;">
-        <div class="card-header">
-        <span>Change Username</span>
-        </div>
-
         <!-- Uses your existing input style -->
-        <input type="text" placeholder="New Username" required id="newUser">
-
-        <button class="primary-btn" type="submit" onclick="ChangeUsername()">Change Username</button>
-        <button class="primary-btn" onclick="window.location.href='map.html'">Cancel</button>
+        <input type="password" placeholder="New Password" required id="newPassword">
+        <button class="primary-btn" type="submit" onclick="SetNewPassword()">Set New Password</button>
     </form>
   </div>
 
