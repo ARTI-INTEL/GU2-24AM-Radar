@@ -11,24 +11,26 @@
   <div class="auth-title">Login to 24AM Radar</div>
 
   <div class="auth-wrap">
-    <form class="card" style="width:320px;">
+    <form id="loginForm" class="card" style="width:320px;">
         <div class="card-header">
-        <span>Login</span>
+            <span>Login</span>
         </div>
 
-        <!-- Uses your existing input style -->
-        <input type="email" placeholder="Email" required>
-        <input type="password" placeholder="Password" required>
+        <input id="loginEmail" type="email" placeholder="Email" required>
+        <input id="loginPassword" type="password" placeholder="Password" required>
 
-        <button class="primary-btn" type="submit" onclick="Login()">Login</button>
+        <button class="primary-btn" type="submit">Login</button>
+
+        <p id="loginMsg" style="margin-top:10px;"></p>
 
         <div class="auth-link">
-        <a href="register.html">Don't have an account?</a>
-        <a href="forgotPW.html">Forgot Password?</a>
-    </div>
+            <a href="register.html">Don't have an account?</a>
+            <a href="forgotPW.html">Forgot Password?</a>
+        </div>
     </form>
   </div>
 
+  <script src="../scripts/server.js"></script>
   <script src="../scripts/script.js"></script>
 </body>
 </html>

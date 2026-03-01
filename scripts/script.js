@@ -185,21 +185,9 @@ function LogOut() {
     window.location.href = "login.html";
 }
 
-function Login() {
-    // Simulate login by storing a token (in a real app, you'd verify credentials)
-    localStorage.setItem("authToken", "dummy-token");
-    // Redirect to main page
-    window.location.href = "map.html";
-}
-
 function ForgotPassword() {
     alert("Password reset link has been sent to your email (simulated).");
     window.location.href = "map.html";
-}
-
-function Register() {
-    alert("Registration successful (simulated). Please log in.");
-    window.location.href = "login.html";
 }
 
 function ChangePassword() {
