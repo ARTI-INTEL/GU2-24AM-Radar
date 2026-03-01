@@ -5,6 +5,8 @@
     --secondary-bg: #10223F;
     --card-color: #162337;
     --fg-color: #fff;
+    --card-color-inverted: #d0dfff;
+    --fg-inverted: #000;
 }
 
 /* RESET */
@@ -253,6 +255,11 @@ input:checked + .slider:before { transform: translateX(26px); }
   filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
 }
 
+.leaflet-popup,
+.leaflet-popup *{
+  filter: none !important;
+}
+
 /* Search Sidebar */
 /* Make sidebar scroll when results grow */
 .sidebar {
@@ -482,4 +489,56 @@ input:checked + .slider:before { transform: translateX(26px); }
     width: 100%;
     max-width: 340px;
   }
+}
+
+/* Airport Popup CSS */
+/* === Make Leaflet popup wrapper transparent === */
+.airport-popup-theme .leaflet-popup-content-wrapper {
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0;
+}
+
+.airport-popup-theme .leaflet-popup-content {
+  margin: 0; /* remove default margin */
+}
+
+/* === Card styling like your screenshot === */
+.airport-popup-card {
+  background: var(--card-color-inverted);             /* deep navy */
+  border-radius: 22px;
+  padding: 10px 15px;         
+  box-shadow:
+    0 18px 45px rgba(255, 255, 255, 0.75),
+    0 0 30px rgba(255, 255, 255, 0.45);
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Title: big, bold, white */
+.airport-popup-title {
+  color: var(--fg-inverted);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Subtitle: muted blue/gray */
+.airport-popup-subtitle {
+  color: var(--fg-inverted);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* === Optional: hide the little popup “tip” triangle (clean card look) === */
+.airport-popup-theme .leaflet-popup-tip {
+  display: none;
 }

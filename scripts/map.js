@@ -1,4 +1,18 @@
-var map = L.map('map').setView([25.276987, 55.296249], 8);
+var map = L.map('map', {
+  center: [25.276987, 55.296249],
+  zoom: 8,
+  minZoom: 2.299,   // ✅ stops zooming out too far (tweak 2–4 if you want)
+  maxZoom: 19
+});
+
+// ✅ World bounds lock (prevents panning above/beside the map)
+const worldBounds = L.latLngBounds(
+  L.latLng(-85, -180),
+  L.latLng(85, 180)
+);
+
+map.setMaxBounds(worldBounds);
+map.options.maxBoundsViscosity = 1.0;
 
 // Dark Base Map (better for radar UI)
 L.tileLayer(
@@ -6,7 +20,9 @@ L.tileLayer(
   {
     attribution: '&copy; OpenStreetMap & CartoDB',
     subdomains: 'abcd',
-    maxZoom: 19
+    maxZoom: 19,
+    noWrap: true,           // ✅ stops repeating
+    bounds: worldBounds     // ✅ keeps tiles within bounds
   }
 ).addTo(map);
 
@@ -40,7 +56,9 @@ const cloudsLayer = L.tileLayer(
   'https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=7379ab9c5e4ad29769cb06aeb1f9853e',
   {
     attribution: '&copy; OpenWeatherMap',
-    opacity: 0.1
+    opacity: 0.1,
+    noWrap: true,           // ✅ stops repeating
+    bounds: worldBounds
   }
 );
 
@@ -50,43 +68,127 @@ const precipitationLayer = L.tileLayer(
   {
     attribution: '&copy; OpenWeatherMap',
     opacity: 0.9,
-    color: 'blue'
+    noWrap: true,           // ✅ stops repeating
+    bounds: worldBounds
   }
 );
 
 // Weather Layer (Wind)
 const windLayer = L.tileLayer(
   'https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=7379ab9c5e4ad29769cb06aeb1f9853e',
-    {
+  {
     attribution: '&copy; OpenWeatherMap',
     opacity: 0.8,
-    color: 'green'
-    }
+    noWrap: true,           // ✅ stops repeating
+    bounds: worldBounds
+  }
 );
 
 // Toggle Logic
 const weatherToggle = document.getElementById("weatherToggle");
 
 if (weatherToggle.checked) {
-    cloudsLayer.addTo(map);
-    precipitationLayer.addTo(map);
-    windLayer.addTo(map);
+  cloudsLayer.addTo(map);
+  precipitationLayer.addTo(map);
+  windLayer.addTo(map);
 }
 
 weatherToggle.addEventListener("change", function () {
-    if (this.checked) {
-        cloudsLayer.addTo(map);
-        precipitationLayer.addTo(map);
-        windLayer.addTo(map);
-    } else {
-        map.removeLayer(cloudsLayer);
-        map.removeLayer(precipitationLayer);
-        map.removeLayer(windLayer); 
-    }
+  if (this.checked) {
+    cloudsLayer.addTo(map);
+    precipitationLayer.addTo(map);
+    windLayer.addTo(map);
+  } else {
+    map.removeLayer(cloudsLayer);
+    map.removeLayer(precipitationLayer);
+    map.removeLayer(windLayer);
+  }
 });
 
-// Search Functionality
+// ✅ Extra safety: if any interaction pushes it, snap back inside bounds
+map.on("drag", () => map.panInsideBounds(worldBounds, { animate: false }));
+map.on("zoomend", () => map.panInsideBounds(worldBounds, { animate: false }));
 
+// --- Airports Layer ---
+const airportToggle = document.getElementById("airportToggle");
+const airportsLayer = L.layerGroup().addTo(map);
+
+// ✅ Create icon once (performance improvement)
+const airportIcon = L.icon({
+  iconUrl: "../images/airport-icon-removebg-preview.png",
+  iconSize: [28, 28],
+  iconAnchor: [14, 14],
+  popupAnchor: [0, -14]
+});
+
+// Load airports inside current view
+async function loadAirportsInView() {
+  if (!airportToggle.checked) return;
+
+  const b = map.getBounds();
+  const minLat = b.getSouth();
+  const maxLat = b.getNorth();
+  const minLon = b.getWest();
+  const maxLon = b.getEast();
+
+  try {
+    airportsLayer.clearLayers();
+
+    const API_BASE = "http://localhost:5000";
+    const url =
+      `${API_BASE}/api/airports?minLat=${minLat}&maxLat=${maxLat}&minLon=${minLon}&maxLon=${maxLon}`;
+
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Airports API failed: ${res.status}`);
+
+    const airports = await res.json();
+
+    airports.forEach((a) => {
+      const lat = Number(a.latidude);
+      const lon = Number(a.Longitude);
+      if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
+
+      const marker = L.marker([lat, lon], { icon: airportIcon });
+
+      const title = `${a.Name || "Airport"} (${a.IATA || "-"} / ${a.ICAO || "-"})`;
+      const subtitle = `${a.City || ""}${a.City ? ", " : ""}${a.Country || ""}`;
+
+      marker.bindPopup(
+        `
+        <div class="airport-popup-card">
+          <div class="airport-popup-title">${title}</div>
+          <div class="airport-popup-subtitle">${subtitle}</div>
+        </div>
+        `,
+        {
+          className: "airport-popup-theme leaflet-popup",
+          closeButton: false,
+          autoPan: true
+        }
+      );
+
+            marker.addTo(airportsLayer);
+          });
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+map.on("moveend", loadAirportsInView);
+
+airportToggle.addEventListener("change", () => {
+  if (airportToggle.checked) {
+    airportsLayer.addTo(map);
+    loadAirportsInView();
+  } else {
+    map.removeLayer(airportsLayer);
+    airportsLayer.clearLayers();
+  }
+});
+
+loadAirportsInView();
+
+// Search Functionality
 const searchInput = document.getElementById("sidebarSearch");
 const resultsWrap = document.getElementById("searchResultsWrap");
 
@@ -135,7 +237,6 @@ searchInput.addEventListener("input", () => {
 
   resultsWrap.classList.remove("hidden");
 
-  // If no matches, show a small message card
   if (matches.length === 0) {
     resultsWrap.innerHTML = `
       <div class="flight-card">
@@ -169,8 +270,6 @@ searchInput.addEventListener("input", () => {
   if (q.length > 0) {
     hideOtherCards();
     resultsWrap.classList.remove("hidden");
-
-    // your existing renderResults() call here
   } else {
     showOtherCards();
     resultsWrap.classList.add("hidden");
