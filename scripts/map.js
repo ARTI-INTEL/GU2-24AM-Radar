@@ -115,7 +115,7 @@ const airportsLayer = L.layerGroup().addTo(map);
 
 // ✅ Create icon once (performance improvement)
 const airportIcon = L.icon({
-  iconUrl: "../images/airport-icon-removebg-preview.png",
+  iconUrl: "../images/airport-Icon.png",
   iconSize: [28, 28],
   iconAnchor: [14, 14],
   popupAnchor: [0, -14]
