@@ -1,188 +1,11 @@
-var map = L.map('map').setView([25.276987, 55.296249], 8);
+// Protects pages that require authentication
 
-// Dark Base Map (better for radar UI)
-L.tileLayer(
-  'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',
-  {
-    attribution: '&copy; OpenStreetMap & CartoDB',
-    subdomains: 'abcd',
-    maxZoom: 19
-  }
-).addTo(map);
+const protectedPages = ["map.html", "settings.html", "changePW.html", "changeUN.html"];
 
-// Day/Night Layer using Leaflet Terminator Plugin
-const dayNightLayer = L.terminator({
-  fillColor: "#ffffff",
-  fillOpacity: 0.2,
-  color: "#ffffff",
-  weight: 0.5
-}).addTo(map);
-
-// DAY / NIGHT TOGGLE
-const dayNightToggle = document.getElementById("dayNightToggle");
-
-// Start enabled only if checked
-if (!dayNightToggle.checked) {
-  map.removeLayer(dayNightLayer);
-}
-
-dayNightToggle.addEventListener("change", function () {
-  if (this.checked) {
-    dayNightLayer.addTo(map);
-  } else {
-    map.removeLayer(dayNightLayer);
-  }
-});
-
-
-// Weather Layer(clounds)
-const cloudsLayer = L.tileLayer(
-  'https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=7379ab9c5e4ad29769cb06aeb1f9853e',
-  {
-    attribution: '&copy; OpenWeatherMap',
-    opacity: 0.1
-  }
-);
-
-// Weather Layer (precipitation)
-const precipitationLayer = L.tileLayer(
-  'https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=7379ab9c5e4ad29769cb06aeb1f9853e',
-  {
-    attribution: '&copy; OpenWeatherMap',
-    opacity: 0.9,
-    color: 'blue'
-  }
-);
-
-// Weather Layer (Wind)
-const windLayer = L.tileLayer(
-  'https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=7379ab9c5e4ad29769cb06aeb1f9853e',
-    {
-    attribution: '&copy; OpenWeatherMap',
-    opacity: 0.8,
-    color: 'green'
-    }
-);
-
-// Toggle Logic
-const weatherToggle = document.getElementById("weatherToggle");
-
-if (weatherToggle.checked) {
-    cloudsLayer.addTo(map);
-    precipitationLayer.addTo(map);
-    windLayer.addTo(map);
-}
-
-weatherToggle.addEventListener("change", function () {
-    if (this.checked) {
-        cloudsLayer.addTo(map);
-        precipitationLayer.addTo(map);
-        windLayer.addTo(map);
-    } else {
-        map.removeLayer(cloudsLayer);
-        map.removeLayer(precipitationLayer);
-        map.removeLayer(windLayer); 
-    }
-});
-
-// Search Functionality
-
-const searchInput = document.getElementById("sidebarSearch");
-const resultsWrap = document.getElementById("searchResultsWrap");
-
-// Demo data (replace later with real API results)
-const demoFlights = [
-  { callsign: "EK403", origin: "Singapore", altitude: "34,000 ft", speed: "480 kts", squawk: "1990", icao: "######" },
-  { callsign: "EK202", origin: "Dubai",     altitude: "31,000 ft", speed: "455 kts", squawk: "1200", icao: "######" },
-  { callsign: "QR100", origin: "Doha",      altitude: "36,000 ft", speed: "510 kts", squawk: "0670", icao: "######" },
-  { callsign: "BA107", origin: "London",    altitude: "33,000 ft", speed: "470 kts", squawk: "4512", icao: "######" },
-];
-
-function renderResults(list) {
-  resultsWrap.innerHTML = list.map(f => `
-    <div class="flight-card">
-      <div class="flight-title">Flight ${f.callsign}(Callsign)</div>
-      <div class="flight-sub">${f.origin}(Origin)</div>
-
-      <div class="flight-meta">
-        <div>Altitude: <span>${f.altitude}</span></div>
-        <div>Speed: <span>${f.speed}</span></div>
-        <div>SQAWK: <span>${f.squawk}</span></div>
-        <div>ICAO: <span>${f.icao}</span></div>
-      </div>
-    </div>
-  `).join("");
-}
-
-function filterFlights(query) {
-  const q = query.trim().toLowerCase();
-  if (!q) return [];
-  return demoFlights.filter(f =>
-    f.callsign.toLowerCase().includes(q) ||
-    f.origin.toLowerCase().includes(q)
-  );
-}
-
-searchInput.addEventListener("input", () => {
-  const q = searchInput.value;
-  const matches = filterFlights(q);
-
-  if (q.trim().length === 0) {
-    resultsWrap.classList.add("hidden");
-    resultsWrap.innerHTML = "";
-    return;
-  }
-
-  resultsWrap.classList.remove("hidden");
-
-  // If no matches, show a small message card
-  if (matches.length === 0) {
-    resultsWrap.innerHTML = `
-      <div class="flight-card">
-        <div class="flight-title">No results</div>
-        <div class="flight-sub">Try a callsign like EK403</div>
-      </div>
-    `;
-    return;
-  }
-
-  renderResults(matches);
-});
-
-const sidebarCards = document.querySelectorAll(".sidebar-card");
-
-function hideOtherCards() {
-  sidebarCards.forEach(card => {
-    card.classList.add("sidebar-hidden");
-  });
-}
-
-function showOtherCards() {
-  sidebarCards.forEach(card => {
-    card.classList.remove("sidebar-hidden");
-  });
-}
-
-searchInput.addEventListener("input", () => {
-  const q = searchInput.value.trim();
-
-  if (q.length > 0) {
-    hideOtherCards();
-    resultsWrap.classList.remove("hidden");
-
-    // your existing renderResults() call here
-  } else {
-    showOtherCards();
-    resultsWrap.classList.add("hidden");
-    resultsWrap.innerHTML = "";
-  }
-});
-
-function LogOut() {
-    // Clear any stored user data (e.g., tokens, session info)
-    localStorage.clear();
-    // Redirect to login page
+if (protectedPages.some(p => window.location.pathname.includes(p))) {
+  if (!localStorage.getItem("authToken")) {
     window.location.href = "login.html";
+  }
 }
 
 function ForgotPassword() {
@@ -200,4 +23,210 @@ function ChangeUsername() {
     alert("Username changed successfully (simulated). Please log in again.");
     localStorage.clear();
     window.location.href = "settings.html";
+}
+
+// Frontend to Backend Connection
+// ================== CONFIG ==================
+const API_BASE = "http://localhost:5000";
+
+// ================== SAVE AUTH ==================
+function saveAuth(token, user) {
+  localStorage.setItem("authToken", token);
+  localStorage.setItem("authUser", JSON.stringify(user));
+}
+
+function clearAuth() {
+  localStorage.removeItem("authToken");
+  localStorage.removeItem("authUser");
+}
+
+// ================== LOGIN ==================
+const loginForm = document.getElementById("loginForm");
+
+if (loginForm) {
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value;
+    const msg = document.getElementById("loginMsg");
+
+    msg.textContent = "Logging in...";
+    msg.style.color = "white";
+
+    try {
+      const res = await fetch(`${API_BASE}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Login failed");
+      }
+
+      saveAuth(data.token, data.user);
+
+      msg.textContent = "Login successful!";
+      msg.style.color = "lightgreen";
+
+      setTimeout(() => {
+        window.location.href = "map.html";
+      }, 800);
+
+    } catch (err) {
+      msg.textContent = err.message;
+      msg.style.color = "red";
+    }
+  });
+}
+
+// ================== REGISTER ==================
+const registerForm = document.getElementById("registerForm");
+
+if (registerForm) {
+  registerForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("regEmail").value.trim();
+    const username = document.getElementById("regUsername").value.trim();
+    const password = document.getElementById("regPassword").value;
+    const msg = document.getElementById("registerMsg");
+
+    msg.textContent = "Creating account...";
+    msg.style.color = "white";
+
+    try {
+      const res = await fetch(`${API_BASE}/api/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, username, password })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Registration failed");
+      }
+
+      msg.textContent = "Registration successful! Redirecting...";
+      msg.style.color = "lightgreen";
+
+      setTimeout(() => {
+        window.location.href = "login.html";
+      }, 1200);
+
+    } catch (err) {
+      msg.textContent = err.message;
+      msg.style.color = "red";
+    }
+  });
+}
+
+// ================== LOGOUT ==================
+function LogOut() {
+  clearAuth();
+  window.location.href = "login.html";
+}
+
+function getToken() {
+  return localStorage.getItem("authToken");
+}
+
+function setMsg(el, text, color = "white") {
+  if (!el) return;
+  el.textContent = text;
+  el.style.color = color;
+}
+
+const changeUNForm = document.getElementById("changeUNForm");
+
+if (changeUNForm) {
+  changeUNForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const newUsername = document.getElementById("newUsername").value.trim();
+    const msg = document.getElementById("changeUNMsg");
+
+    setMsg(msg, "Updating username...");
+
+    try {
+      const res = await fetch(`${API_BASE}/api/user/username`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${getToken()}`
+        },
+        body: JSON.stringify({ newUsername })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message || "Username update failed");
+
+      // Update local stored user (optional but nice)
+      const user = JSON.parse(localStorage.getItem("authUser") || "{}");
+      user.username = data.username;
+      localStorage.setItem("authUser", JSON.stringify(user));
+
+      setMsg(msg, "Username updated!", "lightgreen");
+
+      setTimeout(() => (window.location.href = "settings.html"), 900);
+    } catch (err) {
+      setMsg(msg, err.message, "red");
+    }
+  });
+}
+
+const changePWForm = document.getElementById("changePWForm");
+
+if (changePWForm) {
+  changePWForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const currentPassword = document.getElementById("currentPassword").value;
+    const newPassword = document.getElementById("newPassword").value;
+    const msg = document.getElementById("changePWMsg");
+
+    setMsg(msg, "Updating password...");
+
+    try {
+      const res = await fetch(`${API_BASE}/api/user/password`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${getToken()}`
+        },
+        body: JSON.stringify({ currentPassword, newPassword })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message || "Password update failed");
+
+      setMsg(msg, "Password updated. Please login again.", "lightgreen");
+
+      // force re-login for safety
+      localStorage.clear();
+      setTimeout(() => (window.location.href = "login.html"), 1200);
+    } catch (err) {
+      setMsg(msg, err.message, "red");
+    }
+  });
+}
+
+// Dynamic Welcome Text in Settings
+// ================== DYNAMIC WELCOME ==================
+const welcomeText = document.getElementById("welcomeText");
+
+if (welcomeText) {
+  const user = JSON.parse(localStorage.getItem("authUser") || "{}");
+
+  if (user.username) {
+    welcomeText.innerHTML = `Welcome to <strong>24AM Radar</strong>, ${user.username}.`;
+  } else {
+    welcomeText.textContent = "Welcome to 24AM Radar.";
+  }
 }

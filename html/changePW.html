@@ -8,17 +8,18 @@
 </head>
 <body class="auth-page">
   <div class="auth-wrap">
-    <form class="card" style="width:320px;">
-        <div class="card-header">
-        <span>Change Password</span>
-        </div>
+    <form id="changePWForm" class="card" style="width:320px;">
+      <div class="card-header"><span>Change Password</span></div>
 
-        <!-- Uses your existing input style -->
-        <input type="password" placeholder="Old Password" required id="oldPass">
-        <input type="password" placeholder="New Password" required id="newPass">
+      <input id="currentPassword" type="password" placeholder="Current Password" required>
+      <input id="newPassword" type="password" placeholder="New Password" required>
 
-        <button class="primary-btn" type="submit" onclick="ChangePassword()">Change Password</button>
-        <button class="primary-btn" onclick="window.location.href='map.html'">Cancel</button>
+      <button class="primary-btn" type="submit">Update</button>
+      <p id="changePWMsg" style="margin-top:10px;"></p>
+
+      <div class="auth-link">
+        <a href="settings.html">Back</a>
+      </div>
     </form>
   </div>
 
