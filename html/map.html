@@ -13,16 +13,23 @@
 
 <!-- TOP NAVBAR -->
 <header class="navbar">
+        <!-- Mobile hamburger -->
+    <button id="menuBtn" class="menu-btn" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false">
+        <i class='bx bx-menu'></i>
+    </button>
+
     <div class="logo">24AMRadar</div>
+
     <a class="settings" href="settings.html">
         <i class='bx bx-cog'> Settings </i>
     </a>
 </header>
 
 <div class="dashboard">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <!-- LEFT SIDEBAR -->
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
 
         <!-- AIR TRAFFIC PANEL -->
         <div class="card sidebar-card">

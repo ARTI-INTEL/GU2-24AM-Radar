@@ -455,3 +455,47 @@ if (searchInput && resultsWrap) {
     marker.openPopup();
   });
 }
+
+// ===== Mobile sidebar toggle =====
+const menuBtn = document.getElementById("menuBtn");
+const sidebar = document.getElementById("sidebar");
+const overlay = document.getElementById("sidebarOverlay");
+
+function openSidebar() {
+  document.body.classList.add("sidebar-open");
+  if (menuBtn) menuBtn.setAttribute("aria-expanded", "true");
+}
+
+function closeSidebar() {
+  document.body.classList.remove("sidebar-open");
+  if (menuBtn) menuBtn.setAttribute("aria-expanded", "false");
+}
+
+function toggleSidebar() {
+  if (document.body.classList.contains("sidebar-open")) closeSidebar();
+  else openSidebar();
+}
+
+if (menuBtn && sidebar && overlay) {
+  menuBtn.addEventListener("click", toggleSidebar);
+  overlay.addEventListener("click", closeSidebar);
+
+  // optional: close with ESC key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeSidebar();
+  });
+
+  // optional: if screen resized to desktop, ensure it's not stuck open
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 768) closeSidebar();
+  });
+}
+
+if (sidebar) {
+  sidebar.addEventListener("click", (e) => {
+    if (window.innerWidth <= 768) {
+      const t = e.target;
+      if (t && (t.tagName === "A" || t.tagName === "BUTTON")) closeSidebar();
+    }
+  });
+}
