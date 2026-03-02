@@ -188,6 +188,120 @@ airportToggle.addEventListener("change", () => {
 
 loadAirportsInView();
 
+// --- Aircraft Layer ---
+const aircraftToggle = document.getElementById("aircraftToggle");
+const aircraftLayer = L.layerGroup().addTo(map);
+
+// simple plane icon (no rotation plugin needed)
+function makePlaneDivIcon(deg = 0) {
+  const safeDeg = Number.isFinite(deg) ? deg : 0;
+
+  return L.divIcon({
+    className: "plane-icon-wrap",
+    html: `
+      <img
+        src="../images/plane-removebg-preview.png"
+        class="plane-icon"
+        style="transform: rotate(${safeDeg}deg);"
+      />
+    `,
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
+    popupAnchor: [0, -12]
+  });
+}
+
+async function loadAircraftInView() {
+  if (!aircraftToggle.checked) return;
+
+  const b = map.getBounds();
+  const minLat = b.getSouth();
+  const maxLat = b.getNorth();
+  const minLon = b.getWest();
+  const maxLon = b.getEast();
+
+  try {
+    aircraftLayer.clearLayers();
+
+    const API_BASE = "http://localhost:5000";
+    const url =
+      `${API_BASE}/api/aircraft?minLat=${minLat}&maxLat=${maxLat}&minLon=${minLon}&maxLon=${maxLon}`;
+
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Aircraft API failed: ${res.status}`);
+
+    const data = await res.json();
+    const states = data.states || [];
+
+    states.forEach((a) => {
+      const lat = Number(a.latitude);
+      const lon = Number(a.longitude);
+      if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
+
+      const heading = Number(a.true_track); // degrees
+      const icon = makePlaneDivIcon(heading);
+
+      const marker = L.marker([lat, lon], { icon });
+
+      const callsign = (a.callsign || "").trim() || "Unknown";
+      const altM = a.baro_altitude;
+      const altFt = Number.isFinite(Number(altM)) ? Math.round(Number(altM) * 3.28084) : null;
+      const speed = a.velocity; // m/s from OpenSky
+      const speedKt = Number.isFinite(Number(speed)) ? Math.round(Number(speed) * 1.94384) : null;
+
+      marker.bindPopup(`
+        <div class="aircraft-popup-card">
+          <div class="aircraft-popup-title">${callsign}</div>
+          <div class="aircraft-popup-subtitle">
+            ICAO24: ${a.icao24 || "-"}<br/>
+            Country: ${a.origin_country || "-"}<br/>
+            Alt: ${altFt ?? "-"} ft<br/>
+            Speed: ${speedKt ?? "-"} kt<br/>
+            Squawk: ${a.squawk || "-"}
+          </div>
+        </div>
+      `, { closeButton: false, autoPan: true, className: "aircraft-popup-theme leaflet-popup" });
+
+      marker.addTo(aircraftLayer);
+    });
+
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// reload on pan/zoom
+map.on("moveend", loadAircraftInView);
+
+// refresh every 10s while toggle is ON
+let aircraftTimer = null;
+
+function startAircraftRefresh() {
+  if (aircraftTimer) clearInterval(aircraftTimer);
+  aircraftTimer = setInterval(loadAircraftInView, 10000);
+}
+
+function stopAircraftRefresh() {
+  if (aircraftTimer) clearInterval(aircraftTimer);
+  aircraftTimer = null;
+}
+
+aircraftToggle.addEventListener("change", () => {
+  if (aircraftToggle.checked) {
+    aircraftLayer.addTo(map);
+    loadAircraftInView();
+    startAircraftRefresh();
+  } else {
+    map.removeLayer(aircraftLayer);
+    aircraftLayer.clearLayers();
+    stopAircraftRefresh();
+  }
+});
+
+// initial
+if (aircraftToggle.checked) startAircraftRefresh();
+loadAircraftInView();
+
 // Search Functionality
 const searchInput = document.getElementById("sidebarSearch");
 const resultsWrap = document.getElementById("searchResultsWrap");

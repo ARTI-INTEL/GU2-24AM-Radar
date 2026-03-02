@@ -6,6 +6,7 @@ import { authRouter } from "./routes/auth.routes.js";
 import { pool } from "./db.js";
 import { userRouter } from "./routes/user.routes.js";
 import { airportsRouter } from "./routes/airports.routes.js";
+import { aircraftRouter } from "./routes/aircraft.routes.js";
 
 const app = express();
 
@@ -38,3 +39,5 @@ app.listen(port, () => {
 app.use("/api/user", userRouter);
 
 app.use("/api/airports", airportsRouter);
+
+app.use("/api/aircraft", aircraftRouter);
