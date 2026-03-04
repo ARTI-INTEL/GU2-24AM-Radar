@@ -10,7 +10,7 @@ export async function getOpenSkyToken() {
   }
 
   // reuse token until 1 minute before expiry
-  if (cachedToken && Date.now() < cachedExpMs - 60_000) {
+  if (cachedToken && Date.now() < cachedExpMs - 90_000) {
     return cachedToken;
   }
 
