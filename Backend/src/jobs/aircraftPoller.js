@@ -8,13 +8,18 @@ export function startAircraftPoller() {
 
   async function poll() {
     try {
-      // Example: poll a fixed region (UAE-ish). You can change these.
-      const minLat = -90.0, maxLat = 90.0, minLon = -180.0, maxLon = 180.0;
+      // Whole world bounds
+      const minLat = -90.0,
+        maxLat = 90.0,
+        minLon = -180.0,
+        maxLon = 180.0;
 
       const token = await getOpenSkyToken();
       const url = `${OPENSKY_BASE}/states/all?lamin=${minLat}&lamax=${maxLat}&lomin=${minLon}&lomax=${maxLon}`;
 
-      const r = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+      const r = await fetch(url, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       if (!r.ok) throw new Error(`OpenSky states failed: ${r.status}`);
 
       const data = await r.json();
@@ -35,10 +40,21 @@ export function startAircraftPoller() {
           vertical_rate: s?.[11] ?? null,
           squawk: s?.[14] ?? null
         }))
-        .filter(x => x.icao24 && Number.isFinite(Number(x.latitude)) && Number.isFinite(Number(x.longitude)));
+        // ✅ Safer numeric checks (no weird Number() coercion)
+        .filter(
+          (x) =>
+            x.icao24 &&
+            typeof x.latitude === "number" &&
+            typeof x.longitude === "number" &&
+            Number.isFinite(x.latitude) &&
+            Number.isFinite(x.longitude)
+        );
 
       if (!states.length) return;
 
+      // =========================
+      // 1) Upsert latest aircraft
+      // =========================
       const values = states.map((a) => [
         a.icao24,
         a.callsign,
@@ -55,6 +71,8 @@ export function startAircraftPoller() {
         a.last_contact
       ]);
 
+      // ✅ FIX: correct MySQL ON DUPLICATE KEY UPDATE syntax
+      // Make sure aircraft_latest.icao24 is PRIMARY KEY or UNIQUE
       await pool.query(
         `
         INSERT INTO aircraft_latest (
@@ -65,22 +83,41 @@ export function startAircraftPoller() {
           time_position, last_contact
         )
         VALUES ?
-        AS new
         ON DUPLICATE KEY UPDATE
-          callsign = new.callsign,
-          origin_country = new.origin_country,
-          latitude = new.latitude,
-          longitude = new.longitude,
-          baro_altitude = new.baro_altitude,
-          velocity = new.velocity,
-          true_track = new.true_track,
-          vertical_rate = new.vertical_rate,
-          on_ground = new.on_ground,
-          squawk = new.squawk,
-          time_position = new.time_position,
-          last_contact = new.last_contact
+          callsign = VALUES(callsign),
+          origin_country = VALUES(origin_country),
+          latitude = VALUES(latitude),
+          longitude = VALUES(longitude),
+          baro_altitude = VALUES(baro_altitude),
+          velocity = VALUES(velocity),
+          true_track = VALUES(true_track),
+          vertical_rate = VALUES(vertical_rate),
+          on_ground = VALUES(on_ground),
+          squawk = VALUES(squawk),
+          time_position = VALUES(time_position),
+          last_contact = VALUES(last_contact)
         `,
         [values]
+      );
+
+      // =========================
+      // 2) Insert track positions
+      // (only: icao, time, lat, lon)
+      // =========================
+      const trackValues = states.map((a) => [
+        a.icao24,
+        // optional: use OpenSky last_contact if available (seconds -> ms)
+        a.last_contact ? new Date(a.last_contact * 1000) : new Date(),
+        a.latitude,
+        a.longitude
+      ]);
+
+      await pool.query(
+        `
+        INSERT INTO aircraft_positions (icao, time, lat, lon)
+        VALUES ?
+        `,
+        [trackValues]
       );
 
       console.log(`Poll OK: ${states.length} aircraft cached`);
@@ -89,7 +126,7 @@ export function startAircraftPoller() {
     }
   }
 
-  // run once immediately, then every interval
+  // Run once immediately, then every interval
   poll();
   setInterval(poll, intervalMs);
 }

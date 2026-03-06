@@ -87,3 +87,11 @@ setInterval(async () => {
     console.error("Aircraft cleanup failed:", err.message);
   }
 }, 15 * 60 * 1000);
+
+// Past positions cleanup (older than 24h)
+setInterval(async () => {
+  await pool.query(`
+    DELETE FROM aircraft_positions
+    WHERE time < (NOW() - INTERVAL 12 HOUR)
+  `);
+}, 15 * 60 * 1000);
