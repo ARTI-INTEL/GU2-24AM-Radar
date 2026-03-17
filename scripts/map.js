@@ -1,3 +1,23 @@
+/* 
+File: map.js
+Project: 24Air Radar
+Author: Muhammad Faiq Imran
+Last Modified: 15/03/2026
+
+Description:
+  This file contains the JavaScript code for the 24Air Radar application, handling map initialization, 
+  real-time flight data loading, user interactions with the map, and search functionality. 
+  It uses Leaflet.js for map rendering and interacts with the backend API to fetch aircraft and airport data, 
+  manage filters, and display relevant information on the map. The script also includes functionality for showing 
+  aircraft tracks and predicted flight paths based on heading.
+
+Dependencies:
+  - Leaflet.js
+  - OpenSky API data (via backend)
+  - Node.js
+  - Express.js
+*/
+
 var map = L.map('map', {
   center: [25.276987, 55.296249],
   zoom: 8,

@@ -1,3 +1,16 @@
+// File: user.routes.js
+// Project: 24Air Radar
+// Author: Muhammad Faiq Imran
+// Last Modified: 15/03/2026
+
+// Description:
+//   This file manages user-related API routes for the 24Air Radar application. 
+//   It includes endpoints for updating the user's username and password.
+// 
+// Dependencies:
+//  - express
+//  - bcryptjs
+
 import express from "express";
 import bcrypt from "bcryptjs";
 import { pool } from "../db.js";
@@ -5,11 +18,7 @@ import { requireAuth } from "../middleware/auth.middleware.js";
 
 export const userRouter = express.Router();
 
-/**
- * PATCH /api/user/username
- * body: { newUsername }
- * requires Bearer token
- */
+// PATCH /api/user/username
 userRouter.patch("/username", requireAuth, async (req, res) => {
   try {
     const { newUsername } = req.body ?? {};
@@ -30,11 +39,7 @@ userRouter.patch("/username", requireAuth, async (req, res) => {
   }
 });
 
-/**
- * PATCH /api/user/password
- * body: { currentPassword, newPassword }
- * requires Bearer token
- */
+// PATCH /api/user/password
 userRouter.patch("/password", requireAuth, async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body ?? {};

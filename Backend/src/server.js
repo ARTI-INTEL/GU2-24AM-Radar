@@ -1,3 +1,23 @@
+// File: server.js
+// Project: 24Air Radar
+// Author: Muhammad Faiq Imran
+// Last Modified: 15/03/2026
+
+// Description:
+//  This file sets up the Express server for the 24Air Radar application. 
+//  It configures middleware for security (Helmet), CORS, and JSON parsing. 
+//  It defines routes for authentication, user management, airports, and aircraft data. 
+//  The server also serves static files from the public directory and includes a health check endpoint. 
+// 
+// Dependencies:
+//  - mysql2
+//  - dotenv
+//  - express
+//  - cors
+//  - helmet
+//  - Path
+//  - Other backend Files(Routes, middleware, jobs and Database)
+
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
@@ -42,12 +62,7 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../public/html/index.html"));
 });
 
-app.use(
-  cors({
-    origin: process.env.CORS_ORIGIN?.split(",").map(s => s.trim()) ?? "*",
-    credentials: false
-  })
-);
+app.use(cors());
 
 app.get("/health", async (_req, res) => {
   try {
@@ -69,11 +84,7 @@ app.use("/api/airports", airportsRouter);
 
 app.use("/api/aircraft", aircraftRouter);
 
-// ======================================================
-// AIRCRAFT CLEANUP JOB
-// Deletes aircraft not updated in last 5 minutes
-// Runs every 15 minutes
-// ======================================================
+// DB CLEANUP - remove aircraft not updated in the last 5 minutes (stale data)
 
 setInterval(async () => {
   try {
@@ -82,7 +93,7 @@ setInterval(async () => {
        WHERE updated_at < (NOW() - INTERVAL 5 MINUTE)`
     );
 
-    console.log(`Aircraft cleanup: removed ${result.affectedRows} old aircraft`);
+    console.log(`Aircraft cleanup: removed ${result.affectedRows} old aircraft  at ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()} - ${new Date().getDate()}/${new Date().getMonth() + 1}/${new Date().getFullYear()}`);
   } catch (err) {
     console.error("Aircraft cleanup failed:", err.message);
   }
@@ -90,8 +101,13 @@ setInterval(async () => {
 
 // Past positions cleanup (older than 24h)
 setInterval(async () => {
-  await pool.query(`
-    DELETE FROM aircraft_positions
-    WHERE time < (NOW() - INTERVAL 12 HOUR)
-  `);
+  try {
+    await pool.query(`
+      DELETE FROM aircraft_positions
+      WHERE time < (NOW() - INTERVAL 12 HOUR)
+    `);
+    console.log(`Past positions cleanup completed at ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()} - ${new Date().getDate()}/${new Date().getMonth() + 1}/${new Date().getFullYear()}`);
+  } catch (err) {
+    console.error("Past positions cleanup failed:", err.message);
+  }
 }, 15 * 60 * 1000);

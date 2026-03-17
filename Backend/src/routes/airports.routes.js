@@ -1,3 +1,15 @@
+// File: airports.routes.js
+// Project: 24Air Radar
+// Author: Muhammad Faiq Imran
+// Last Modified: 15/03/2026
+
+// Description:
+//   This file manages airport-related API routes for the 24Air Radar application. 
+//   It includes endpoints for retrieving airports within a bounding box and searching for airports.
+// 
+// Dependencies:
+//  - express
+
 import express from "express";
 import { pool } from "../db.js";
 

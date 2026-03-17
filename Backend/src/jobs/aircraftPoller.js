@@ -1,3 +1,16 @@
+// File: aircraftPoller.js
+// Project: 24Air Radar
+// Author: Muhammad Faiq Imran
+// Last Modified: 15/03/2026
+
+// Description:
+//   This file manages aircraft-related API routes for the 24Air Radar application. 
+//   It includes endpoints for retrieving aircraft states within a bounding box and searching for aircraft.
+// 
+// Dependencies:
+//  - opensky-network.org API
+// - mysql2 for database interactions
+
 import { pool } from "../db.js";
 import { getOpenSkyToken } from "../openskyToken.js";
 
@@ -120,7 +133,7 @@ export function startAircraftPoller() {
         [trackValues]
       );
 
-      console.log(`Poll OK: ${states.length} aircraft cached`);
+      console.log(`Poll OK: ${states.length} aircraft cached at ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()} - ${new Date().getDate()}/${new Date().getMonth() + 1}/${new Date().getFullYear()}`);
     } catch (e) {
       console.error("Poll FAILED:", e?.message || e);
     }

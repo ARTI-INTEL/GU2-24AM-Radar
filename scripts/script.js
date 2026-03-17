@@ -1,3 +1,76 @@
+/* 
+File: script.js
+Project: 24Air Radar
+Author: Muhammad Faiq Imran
+Last Modified: 15/03/2026
+
+Description:
+  This file contains the JavaScript code for the 24Air Radar application, handling user interactions, 
+  authentication, and communication with the backend API. It includes functionality for showing/hiding passwords,
+  displaying toast notifications, managing user sessions, and connecting to the backend for login, registration,
+  and user settings updates.
+
+Dependencies:
+  - Node.js 
+  - Express.js 
+*/
+
+// ================== SHOW / HIDE PASSWORD ==================
+function setupPasswordToggles() {
+  const toggleButtons = document.querySelectorAll(".toggle-password");
+
+  toggleButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const targetId = btn.getAttribute("data-target");
+      const input = document.getElementById(targetId);
+
+      if (!input) return;
+
+      if (input.type === "password") {
+        input.type = "text";
+        btn.textContent = "Hide";
+      } else {
+        input.type = "password";
+        btn.textContent = "Show";
+      }
+    });
+  });
+}
+
+document.addEventListener("DOMContentLoaded", setupPasswordToggles);
+
+// ================== TOAST POPUPS ==================
+function getToastContainer() {
+  let container = document.getElementById("toastContainer");
+
+  if (!container) {
+    container = document.createElement("div");
+    container.id = "toastContainer";
+    container.className = "toast-container";
+    document.body.appendChild(container);
+  }
+
+  return container;
+}
+
+function showToast(message, type = "info", duration = 2500) {
+  const container = getToastContainer();
+
+  const toast = document.createElement("div");
+  toast.className = `toast toast-${type}`;
+  toast.textContent = message;
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.add("toast-hide");
+
+    setTimeout(() => {
+      toast.remove();
+    }, 250);
+  }, duration);
+}
+
 // Protects pages that require authentication
 
 const protectedPages = ["map.html", "settings.html", "changePW.html", "changeUN.html"];
@@ -49,10 +122,8 @@ if (loginForm) {
 
     const email = document.getElementById("loginEmail").value.trim();
     const password = document.getElementById("loginPassword").value;
-    const msg = document.getElementById("loginMsg");
 
-    msg.textContent = "Logging in...";
-    msg.style.color = "white";
+    showToast("Logging in...", "info", 1200);
 
     try {
       const res = await fetch(`${API_BASE}/api/auth/login`, {
@@ -69,16 +140,14 @@ if (loginForm) {
 
       saveAuth(data.token, data.user);
 
-      msg.textContent = "Login successful!";
-      msg.style.color = "lightgreen";
+      showToast("Login successful!", "success", 1200);
 
       setTimeout(() => {
         window.location.href = "map.html";
       }, 800);
 
     } catch (err) {
-      msg.textContent = err.message;
-      msg.style.color = "red";
+      showToast(err.message, "error", 1200);
     }
   });
 }
@@ -93,10 +162,8 @@ if (registerForm) {
     const email = document.getElementById("regEmail").value.trim();
     const username = document.getElementById("regUsername").value.trim();
     const password = document.getElementById("regPassword").value;
-    const msg = document.getElementById("registerMsg");
 
-    msg.textContent = "Creating account...";
-    msg.style.color = "white";
+    showToast("Creating account...", "info", 1200);
 
     try {
       const res = await fetch(`${API_BASE}/api/auth/register`, {
@@ -111,16 +178,14 @@ if (registerForm) {
         throw new Error(data.message || "Registration failed");
       }
 
-      msg.textContent = "Registration successful! Redirecting...";
-      msg.style.color = "lightgreen";
+      showToast("Registration successful! Redirecting...", "success", 1200);
 
       setTimeout(() => {
         window.location.href = "login.html";
       }, 1200);
 
     } catch (err) {
-      msg.textContent = err.message;
-      msg.style.color = "red";
+      showToast(err.message, "error", 1200);
     }
   });
 }
@@ -129,6 +194,7 @@ if (registerForm) {
 function LogOut() {
   clearAuth();
   window.location.href = "login.html";
+  showToast("You have been logged out.", "info", 1200);
 }
 
 function getToken() {
@@ -148,9 +214,8 @@ if (changeUNForm) {
     e.preventDefault();
 
     const newUsername = document.getElementById("newUsername").value.trim();
-    const msg = document.getElementById("changeUNMsg");
 
-    setMsg(msg, "Updating username...");
+    showToast("Updating username...", "info", 1200);
 
     try {
       const res = await fetch(`${API_BASE}/api/user/username`, {
@@ -171,11 +236,11 @@ if (changeUNForm) {
       user.username = data.username;
       localStorage.setItem("authUser", JSON.stringify(user));
 
-      setMsg(msg, "Username updated!", "lightgreen");
+      showToast("Username updated!", "success", 1200);
 
       setTimeout(() => (window.location.href = "settings.html"), 900);
     } catch (err) {
-      setMsg(msg, err.message, "red");
+      showToast(err.message, "error", 1200);
     }
   });
 }
@@ -188,9 +253,8 @@ if (changePWForm) {
 
     const currentPassword = document.getElementById("currentPassword").value;
     const newPassword = document.getElementById("newPassword").value;
-    const msg = document.getElementById("changePWMsg");
 
-    setMsg(msg, "Updating password...");
+    showToast("Updating password...", "info", 1200);
 
     try {
       const res = await fetch(`${API_BASE}/api/user/password`, {
@@ -206,13 +270,13 @@ if (changePWForm) {
 
       if (!res.ok) throw new Error(data.message || "Password update failed");
 
-      setMsg(msg, "Password updated. Please login again.", "lightgreen");
+      showToast("Password updated. Please login again.", "success", 1200);
 
       // force re-login for safety
       localStorage.clear();
       setTimeout(() => (window.location.href = "login.html"), 1200);
     } catch (err) {
-      setMsg(msg, err.message, "red");
+      showToast(err.message, "error", 1200);
     }
   });
 }
@@ -225,8 +289,8 @@ if (welcomeText) {
   const user = JSON.parse(localStorage.getItem("authUser") || "{}");
 
   if (user.username) {
-    welcomeText.innerHTML = `Welcome to <strong>24AM Radar</strong>, ${user.username}.`;
+    welcomeText.innerHTML = `Welcome to <strong>24Air Radar</strong>, ${user.username}.`;
   } else {
-    welcomeText.textContent = "Welcome to 24AM Radar.";
+    welcomeText.textContent = "Welcome to 24Air Radar.";
   }
 }
