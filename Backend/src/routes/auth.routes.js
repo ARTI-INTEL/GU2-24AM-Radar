@@ -16,6 +16,9 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { pool } from "../db.js";
+import crypto from "crypto";
+import { sendResetEmail } from "../utils/mailer.js";
+
 
 export const authRouter = express.Router();
 
@@ -110,6 +113,123 @@ authRouter.post("/login", async (req, res) => {
         username: user.Username
       }
     });
+  } catch (err) {
+    return res.status(500).json({ message: "Server error", error: String(err.message || err) });
+  }
+});
+
+/**
+ * POST /api/auth/forgot-password
+ * body: { email }
+ */
+authRouter.post("/forgot-password", async (req, res) => {
+  try {
+    const { email } = req.body ?? {};
+    const cleanEmail = String(email || "").trim().toLowerCase();
+
+    if (!cleanEmail) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    const [rows] = await pool.query(
+      "SELECT `UserID`, `UserEmail` FROM `user` WHERE `UserEmail` = ? LIMIT 1",
+      [cleanEmail]
+    );
+
+    // Always return success-like response so attackers can't discover registered emails
+    if (rows.length === 0) {
+      return res.json({ message: "If that email exists, a reset link has been sent." });
+    }
+
+    const user = rows[0];
+
+    // Random raw token for link
+    const rawToken = crypto.randomBytes(32).toString("hex");
+
+    // Store only hashed token in DB
+    const tokenHash = crypto.createHash("sha256").update(rawToken).digest("hex");
+
+    // Expire in 15 minutes
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+
+    await pool.query(
+      `
+      INSERT INTO password_resets (user_id, token_hash, expires_at)
+      VALUES (?, ?, ?)
+      `,
+      [user.UserID, tokenHash, expiresAt]
+    );
+
+    const resetLink = `${process.env.RESET_LINK_BASE}?token=${rawToken}`;
+
+    await sendResetEmail(user.UserEmail, resetLink);
+
+    // Helpful for local demo/testing
+    return res.json({
+      message: "If that email exists, a reset link has been sent.",
+      resetLink
+    });
+  } catch (err) {
+    return res.status(500).json({ message: "Server error", error: String(err.message || err) });
+  }
+});
+
+/**
+ * POST /api/auth/reset-password
+ * body: { token, newPassword }
+ */
+authRouter.post("/reset-password", async (req, res) => {
+  try {
+    const { token, newPassword } = req.body ?? {};
+
+    if (!token || !newPassword) {
+      return res.status(400).json({ message: "token and newPassword required" });
+    }
+
+    if (String(newPassword).length < 6) {
+      return res.status(400).json({ message: "New password must be at least 6 characters" });
+    }
+
+    const tokenHash = crypto.createHash("sha256").update(String(token)).digest("hex");
+
+    const [rows] = await pool.query(
+      `
+      SELECT id, user_id, expires_at, used_at
+      FROM password_resets
+      WHERE token_hash = ?
+      ORDER BY id DESC
+      LIMIT 1
+      `,
+      [tokenHash]
+    );
+
+    if (rows.length === 0) {
+      return res.status(400).json({ message: "Invalid or expired reset token" });
+    }
+
+    const resetRow = rows[0];
+
+    if (resetRow.used_at) {
+      return res.status(400).json({ message: "This reset link has already been used" });
+    }
+
+    if (new Date(resetRow.expires_at) < new Date()) {
+      return res.status(400).json({ message: "Reset link has expired" });
+    }
+
+    const hash = await bcrypt.hash(String(newPassword), 12);
+
+    await pool.query(
+      "UPDATE `user` SET `Password` = ? WHERE `UserID` = ?",
+      [hash, resetRow.user_id]
+    );
+
+    await pool.query(
+      "UPDATE password_resets SET used_at = NOW() WHERE id = ?",
+      [resetRow.id]
+    );
+
+    return res.json({ message: "Password reset successful" });
   } catch (err) {
     return res.status(500).json({ message: "Server error", error: String(err.message || err) });
   }

@@ -14,27 +14,26 @@ Description:
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register • 24Air Radar</title>
+  <title>Reset Password • 24Air Radar</title>
   <link rel="stylesheet" href="../styles/style.css">
 </head>
 <body class="auth-page">
 
-  <div class="auth-title">Register to 24Air Radar</div>
+  <div class="auth-title">Reset Password</div>
 
   <div class="auth-wrap">
-    <form class="card" style="width:320px;">
-        <!-- Uses your existing input style -->
-        <div class="password-wrap">
-          <input id="password" type="password" placeholder="New Password" required>
-          <button type="button" class="toggle-password" data-target="password">Show</button>
-        </div>
+    <form id="resetPWForm" class="card" style="width:320px;">
+      <div class="password-wrap">
+        <input id="password" type="password" placeholder="New Password" required>
+        <button type="button" class="toggle-password" data-target="password">Show</button>
+      </div>
 
-        <div class="password-wrap">
-          <input id="confirmPassword" type="password" placeholder="Confirm Password" required>
-          <button type="button" class="toggle-password" data-target="confirmPassword">Show</button>
-        </div>
-        
+      <div class="password-wrap">
+        <input id="confirmPassword" type="password" placeholder="Confirm Password" required>
+        <button type="button" class="toggle-password" data-target="confirmPassword">Show</button>
+      </div>
 
+      <button class="primary-btn" type="submit">Reset Password</button>
     </form>
   </div>
 

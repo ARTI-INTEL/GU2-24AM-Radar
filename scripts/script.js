@@ -294,3 +294,92 @@ if (welcomeText) {
     welcomeText.textContent = "Welcome to 24Air Radar.";
   }
 }
+
+// ================== FORGOT PASSWORD ==================
+const forgotPWForm = document.getElementById("forgotPWForm");
+
+if (forgotPWForm) {
+  forgotPWForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("forgotPWEmail").value.trim();
+
+    showToast("Sending reset link...", "info", 1200);
+
+    try {
+      const res = await fetch(`${API_BASE}/api/auth/forgot-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Failed to send reset link");
+      }
+
+      showToast("If that email exists, a reset link has been sent.", "success", 2000);
+
+      // Helpful for local demo/testing
+      if (data.resetLink) {
+        console.log("RESET LINK:", data.resetLink);
+      }
+    } catch (err) {
+      showToast(err.message, "error", 2000);
+    }
+  });
+}
+
+// Reset Password
+const resetPWForm = document.getElementById("resetPWForm");
+
+if (resetPWForm) {
+  resetPWForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const newPassword = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+
+    if (newPassword !== confirmPassword) {
+      showToast("Passwords do not match", "error", 2000);
+      return;
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+
+    if (!token) {
+      showToast("Reset token is missing", "error", 2000);
+      return;
+    }
+
+    showToast("Resetting password...", "info", 1200);
+
+    try {
+      const res = await fetch(`${API_BASE}/api/auth/reset-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ token, newPassword })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Password reset failed");
+      }
+
+      showToast("Password reset successful. Redirecting...", "success", 1500);
+
+      setTimeout(() => {
+        window.location.href = "login.html";
+      }, 1200);
+    } catch (err) {
+      showToast(err.message, "error", 2000);
+    }
+  });
+}

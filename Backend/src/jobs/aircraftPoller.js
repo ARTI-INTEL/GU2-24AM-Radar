@@ -4,12 +4,11 @@
 // Last Modified: 15/03/2026
 
 // Description:
-//   This file manages aircraft-related API routes for the 24Air Radar application. 
-//   It includes endpoints for retrieving aircraft states within a bounding box and searching for aircraft.
+//   This file implements a background job that periodically polls the OpenSky Network API for live aircraft data.
 // 
 // Dependencies:
 //  - opensky-network.org API
-// - mysql2 for database interactions
+//  - mysql2 for database interactions
 
 import { pool } from "../db.js";
 import { getOpenSkyToken } from "../openskyToken.js";

@@ -154,8 +154,8 @@ The application interface will load and display the aircraft map.
 │
 ├── html
 ├── css
-├── js
-├── assets
+├── scripts
+├── images
 │
 │
 └── README.md
@@ -178,18 +178,6 @@ Creates a new user account.
 
 PATCH /api/user/username
 Updates a user's username.
-
----
-
-# Future Improvements
-
-Possible enhancements to the system include:
-
-• Flight tracking notifications
-• Mobile application version
-• Historical aircraft playback
-• Advanced aircraft filtering
-• Weather radar overlay
 
 ---
 
