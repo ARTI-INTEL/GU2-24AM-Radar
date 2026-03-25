@@ -162,7 +162,7 @@ const airportsLayer = L.layerGroup().addTo(map);
 
 // ✅ Create icon once (performance improvement)
 const airportIcon = L.icon({
-  iconUrl: "../images/airport-Icon.png",
+  iconUrl: "../images/airport.png",
   iconSize: [28, 28],
   iconAnchor: [14, 14],
   popupAnchor: [0, -14]
@@ -707,7 +707,7 @@ function destinationPoint(lat, lon, bearingDeg, distanceKm) {
   return [toDeg(lat2), lon2Deg];
 }
 
-function drawHeadingLine(lat, lon, headingDeg, distanceKm = 50) {
+function drawHeadingLine(lat, lon, headingDeg, distanceKm = 100) {
   if (headingLine) {
     map.removeLayer(headingLine);
     headingLine = null;

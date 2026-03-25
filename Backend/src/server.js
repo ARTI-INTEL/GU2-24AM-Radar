@@ -43,26 +43,45 @@ app.use(
         "default-src": ["'self'"],
         "script-src": ["'self'", "https://unpkg.com"],
         "style-src": ["'self'", "'unsafe-inline'", "https://unpkg.com"],
-        "img-src": ["'self'", "data:", "blob:", "https://*.tile.openstreetmap.org", "https://*.basemaps.cartocdn.com", "https://tile.openweathermap.org"],
-        "connect-src": ["'self'", "https://tile.openweathermap.org", "https://*.basemaps.cartocdn.com", "https://*.tile.openstreetmap.org"],
-        "worker-src": ["'self'", "blob:"],
-      },
-    },
+        "img-src": [
+          "'self'",
+          "data:",
+          "blob:",
+          "https://*.tile.openstreetmap.org",
+          "https://*.basemaps.cartocdn.com",
+          "https://tile.openweathermap.org"
+        ],
+        "connect-src": [
+          "'self'",
+          "https://tile.openweathermap.org",
+          "https://*.basemaps.cartocdn.com",
+          "https://*.tile.openstreetmap.org"
+        ],
+        "worker-src": ["'self'", "blob:"]
+      }
+    }
   })
 );
+
 app.use(express.json());
+
+app.use(cors({
+  origin: "http://127.0.0.1:5500",
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Serve entire public folder
-app.use(express.static(path.join(__dirname, "../public")));
+app.use("/html", express.static(path.join(__dirname, "../../html")));
+app.use("/scripts", express.static(path.join(__dirname, "../../scripts")));
+app.use("/styles", express.static(path.join(__dirname, "../../styles")));
+app.use("/images", express.static(path.join(__dirname, "../../images")));
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/html/index.html"));
+  res.sendFile(path.join(__dirname, "../../html/index.html"));
 });
-
-app.use(cors());
 
 app.get("/health", async (_req, res) => {
   try {
@@ -74,18 +93,11 @@ app.get("/health", async (_req, res) => {
 });
 
 app.use("/api/auth", authRouter);
-
-const port = Number(process.env.PORT || 8080);
-app.listen(port, () => console.log(`Running on ${port}`));
-
 app.use("/api/user", userRouter);
-
 app.use("/api/airports", airportsRouter);
-
 app.use("/api/aircraft", aircraftRouter);
 
-// DB CLEANUP - remove aircraft not updated in the last 5 minutes (stale data)
-
+// DB CLEANUP - remove aircraft not updated in the last 5 minutes
 setInterval(async () => {
   try {
     const [result] = await pool.query(
@@ -93,21 +105,33 @@ setInterval(async () => {
        WHERE updated_at < (NOW() - INTERVAL 5 MINUTE)`
     );
 
-    console.log(`Aircraft cleanup: removed ${result.affectedRows} old aircraft  at ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()} - ${new Date().getDate()}/${new Date().getMonth() + 1}/${new Date().getFullYear()}`);
+    console.log(
+      `Aircraft cleanup: removed ${result.affectedRows} old aircraft at ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()} - ${new Date().getDate()}/${new Date().getMonth() + 1}/${new Date().getFullYear()}`
+    );
   } catch (err) {
     console.error("Aircraft cleanup failed:", err.message);
   }
 }, 15 * 60 * 1000);
 
-// Past positions cleanup (older than 24h)
+// Past positions cleanup (older than 12h)
 setInterval(async () => {
   try {
     await pool.query(`
       DELETE FROM aircraft_positions
       WHERE time < (NOW() - INTERVAL 12 HOUR)
     `);
-    console.log(`Past positions cleanup completed at ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()} - ${new Date().getDate()}/${new Date().getMonth() + 1}/${new Date().getFullYear()}`);
+    console.log(
+      `Past positions cleanup completed at ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()} - ${new Date().getDate()}/${new Date().getMonth() + 1}/${new Date().getFullYear()}`
+    );
   } catch (err) {
     console.error("Past positions cleanup failed:", err.message);
   }
 }, 15 * 60 * 1000);
+
+// 404 page for unknown frontend routes
+app.use((req, res) => {
+  res.status(404).sendFile(path.join(__dirname, "../../html/404.html"));
+});
+
+const port = Number(process.env.PORT || 8080);
+app.listen(port, () => console.log(`Running on ${port}`));

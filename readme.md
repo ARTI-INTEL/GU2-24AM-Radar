@@ -111,23 +111,24 @@ Create the database in MySQL:
 
 CREATE DATABASE 24air_radar;
 
-Import the provided SQL schema file if included in the project.
+Import the provided SQL schema file.
 
 ---
 
 ## 5. Start the Backend Server
 
+First open command promt for the backend directory by:
+
+Opening Command promt and running:
+
+cd C:\Users\faiqi\Documents\Coding\VS Code Codes\Assignments\GU2 24Air Radar\Backend
+
+Or
+Right clicking the backend folder in file explorer and click Open in Terminal
+
 Run the backend server:
 
-npm start
-
-or
-
-node src/server.js
-
-The backend API will run on:
-
-http://localhost:5000
+npm run dev
 
 ---
 
@@ -135,10 +136,9 @@ http://localhost:5000
 
 Open the main HTML file in your browser:
 
-public/index.html
+html/index.html
 
-The application interface will load and display the aircraft map.
-
+The application interface will.
 ---
 
 # Project Structure

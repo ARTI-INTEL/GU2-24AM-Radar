@@ -27,17 +27,20 @@ export async function sendResetEmail(to, resetLink) {
       pass: process.env.MAIL_PASS
     }
   });
-
-  await transporter.sendMail({
-    from: `"24Air Radar" <${process.env.MAIL_USER}>`,
-    to,
-    subject: "Reset your 24Air Radar password",
-    html: `
-      <p>You requested a password reset for 24Air Radar.</p>
-      <p>Click the link below to reset your password:</p>
-      <p><a href="${resetLink}">${resetLink}</a></p>
-      <p>This link expires in 15 minutes.</p>
-      <p>If you did not request this, you can ignore this email.</p>
-    `
-  });
+  try { 
+    await transporter.sendMail({
+      from: `"24Air Radar" <${process.env.MAIL_USER}>`,
+      to,
+      subject: "Reset your 24Air Radar password",
+      html: `
+        <p>You requested a password reset for 24Air Radar.</p>
+        <p>Click the link below to reset your password:</p>
+        <p><a href="${resetLink}">${resetLink}</a></p>
+        <p>This link expires in 15 minutes.</p>
+        <p>If you did not request this, you can ignore this email.</p>
+      `
+    });
+  } catch (err) {
+    console.error("Error sending reset email:", err);
+  }
 }
