@@ -55,10 +55,10 @@ authRouter.post("/register", async (req, res) => {
     // IMPORTANT: hashed passwords need enough column length (recommended VARCHAR(255))
     const hash = await bcrypt.hash(password, 12);
 
-    // Defaults: RefreshRate=10, PrefTheme='dark'
+
     await pool.query(
-      "INSERT INTO `user` (`UserEmail`, `Username`, `Password`, `RefreshRate`, `PrefTheme`) VALUES (?, ?, ?, ?, ?)",
-      [cleanEmail, cleanUsername, hash, 10, "dark"]
+      "INSERT INTO `user` (`UserEmail`, `Username`, `Password`) VALUES (?, ?, ?)",
+      [cleanEmail, cleanUsername, hash]
     );
 
     return res.status(201).json({ message: "Registered successfully" });
