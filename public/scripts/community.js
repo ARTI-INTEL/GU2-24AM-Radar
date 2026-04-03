@@ -13,7 +13,7 @@ Dependencies:
   - Express.js 
 */
 
-const API = "http://localhost:5000/api/community";
+// const API_BASE = "http://localhost:5500/api/community";
 
 const postsDiv = document.getElementById("posts");
 
@@ -39,7 +39,7 @@ function formatTime(dateString) {
 
 async function loadPosts() {
   try {
-    const res = await fetch(`${API}/posts`);
+    const res = await fetch(`${API_BASE}/api/community/posts`);
     const posts = await res.json();
 
     postsDiv.innerHTML = "";
@@ -68,7 +68,7 @@ async function loadPosts() {
         ${post.content}
       </div>
 
-      ${post.image_url ? `<img class="post-image" src="../backend/src/uploads/${post.image_url}">` : ""}
+      ${post.image_url ? `<img class="post-image" src="api/uploads/${post.image_url}">` : ""}
 
       <div class="post-actions">
 
@@ -113,7 +113,7 @@ document.getElementById("postForm").addEventListener("submit", async e => {
 
   try {
 
-    await fetch(`${API}/post`, {
+    await fetch(`${API_BASE}/post`, {
       method: "POST",
       body: formData
     });
@@ -134,7 +134,7 @@ async function likePost(postId) {
 
   try {
 
-    await fetch(`${API}/like`, {
+    await fetch(`${API_BASE}/api/community/like`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -161,7 +161,7 @@ async function commentPost(postId) {
 
   try {
 
-    await fetch(`${API}/comment`, {
+    await fetch(`${API_BASE}/api/community/comment`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -187,7 +187,7 @@ async function loadComments(postId) {
 
   try {
 
-    const res = await fetch(`${API}/comments/${postId}`);
+    const res = await fetch(`${API_BASE}/api/community/comments/${postId}`);
     const comments = await res.json();
 
     const container = document.getElementById(`comments-${postId}`);

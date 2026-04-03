@@ -1,3 +1,2 @@
-Backend/.env
-Backend/node_modules
-todo.txt
+.env
+/node_modules

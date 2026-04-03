@@ -1,5 +1,5 @@
 {
-  "name": "24air-radar-backend",
+  "name": "24air-radar",
   "version": "1.0.0",
   "type": "module",
   "main": "src/server.js",

@@ -49,13 +49,14 @@ app.use(
                       "'self'",
                       "data:",
                       "blob:",
-                      "http://localhost:5000",   // ← add this
+                      "http://localhost:5500",   
                       "https://*.tile.openstreetmap.org",
                       "https://*.basemaps.cartocdn.com",
                       "https://tile.openweathermap.org"
                     ],
         "connect-src": [
           "'self'",
+          "https://unpkg.com",
           "https://tile.openweathermap.org",
           "https://*.basemaps.cartocdn.com",
           "https://*.tile.openstreetmap.org"
@@ -74,13 +75,13 @@ app.use(cors());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.use("/html", express.static(path.join(__dirname, "../../html")));
-app.use("/scripts", express.static(path.join(__dirname, "../../scripts")));
-app.use("/styles", express.static(path.join(__dirname, "../../styles")));
-app.use("/images", express.static(path.join(__dirname, "../../images")));
+app.use("/html", express.static(path.join(__dirname, "../public/html")));
+app.use("/scripts", express.static(path.join(__dirname, "../public/scripts")));
+app.use("/styles", express.static(path.join(__dirname, "../public/styles")));
+app.use("/images", express.static(path.join(__dirname, "../public/images")));
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../../html/index.html"));
+  res.sendFile(path.join(__dirname, "../public/html/index.html"));
 });
 
 app.get("/health", async (_req, res) => {
@@ -132,7 +133,7 @@ setInterval(async () => {
 
 // 404 page for unknown frontend routes
 app.use((req, res) => {
-  res.status(404).sendFile(path.join(__dirname, "../../html/404.html"));
+  res.status(404).sendFile(path.join(__dirname, "../public/html/404.html"));
 });
 
 const port = Number(process.env.PORT || 8080);

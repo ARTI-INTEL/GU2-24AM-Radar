@@ -112,7 +112,7 @@ if (protectedPages.some(p => window.location.pathname.includes(p))) {
 
 // Frontend to Backend Connection
 // ================== CONFIG ==================
-const API_BASE = "http://localhost:5000";
+const API_BASE = "";
 
 // ================== SAVE AUTH ==================
 function saveAuth(token, user) {
