@@ -969,3 +969,29 @@ input:checked + .slider:before { transform: translateX(26px); }
         display: none;
     }
 }
+
+/* Fix community container mobile overflow */
+.community-container {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+    .community-container {
+        padding: 12px;
+    }
+
+    .create-post textarea {
+        font-size: 16px; /* prevents iOS auto-zoom */
+    }
+
+    .post {
+        word-break: break-word;
+        overflow-wrap: break-word;
+    }
+
+    .post-image {
+        max-width: 100%;
+        height: auto;
+    }
+}

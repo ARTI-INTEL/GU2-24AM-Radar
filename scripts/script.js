@@ -15,9 +15,34 @@ Dependencies:
   - Express.js 
 */
 
-document.querySelectorAll("a.back").forEach(link => {
-    link.innerHTML = "<i class='bx bx-arrow-back'></i>";
-});
+const mobileQuery = window.matchMedia("(max-width: 600px)");
+
+function updateBackButtons() {
+
+  document.querySelectorAll("a.back").forEach(link => {
+
+    // Save original text if not already saved
+    if (!link.dataset.originalText) {
+      link.dataset.originalText = link.innerHTML;
+    }
+
+    if (mobileQuery.matches) {
+      link.innerHTML = "<i class='bx bx-arrow-back'></i>";
+    } else {
+      link.innerHTML = link.dataset.originalText;
+    }
+
+  });
+
+}
+
+// Run once
+updateBackButtons();
+
+// Run when screen changes
+mobileQuery.addEventListener("change", updateBackButtons);
+
+
 
 // ================== SHOW / HIDE PASSWORD ==================
 function setupPasswordToggles() {
