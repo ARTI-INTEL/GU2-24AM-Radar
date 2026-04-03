@@ -16,6 +16,7 @@
 //  - cors
 //  - helmet
 //  - Path
+//  - multer
 //  - Other backend Files(Routes, middleware, jobs and Database)
 
 import express from "express";
@@ -30,6 +31,7 @@ import { aircraftRouter } from "./routes/aircraft.routes.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import { startAircraftPoller } from "./jobs/aircraftPoller.js";
+import communityRoutes from "./routes/community.routes.js";
 
 startAircraftPoller();
 
@@ -93,6 +95,8 @@ app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/airports", airportsRouter);
 app.use("/api/aircraft", aircraftRouter);
+app.use("/api/community", communityRoutes);
+app.use("/uploads", express.static("uploads"));
 
 // DB CLEANUP - remove aircraft not updated in the last 5 minutes
 setInterval(async () => {

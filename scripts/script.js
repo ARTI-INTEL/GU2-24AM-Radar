@@ -73,29 +73,12 @@ function showToast(message, type = "info", duration = 2500) {
 
 // Protects pages that require authentication
 
-const protectedPages = ["map.html", "settings.html", "changePW.html", "changeUN.html"];
+const protectedPages = ["map.html", "settings.html", "changePW.html"];
 
 if (protectedPages.some(p => window.location.pathname.includes(p))) {
   if (!localStorage.getItem("authToken")) {
     window.location.href = "login.html";
   }
-}
-
-function ForgotPassword() {
-    alert("Password reset link has been sent to your email (simulated).");
-    window.location.href = "map.html";
-}
-
-function ChangePassword() {
-    alert("Password changed successfully (simulated). Please log in again.");
-    localStorage.clear();
-    window.location.href = "login.html";
-}
-
-function ChangeUsername() {
-    alert("Username changed successfully (simulated). Please log in again.");
-    localStorage.clear();
-    window.location.href = "settings.html";
 }
 
 // Frontend to Backend Connection
@@ -205,44 +188,6 @@ function setMsg(el, text, color = "white") {
   if (!el) return;
   el.textContent = text;
   el.style.color = color;
-}
-
-const changeUNForm = document.getElementById("changeUNForm");
-
-if (changeUNForm) {
-  changeUNForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const newUsername = document.getElementById("newUsername").value.trim();
-
-    showToast("Updating username...", "info", 1200);
-
-    try {
-      const res = await fetch(`${API_BASE}/api/user/username`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${getToken()}`
-        },
-        body: JSON.stringify({ newUsername })
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) throw new Error(data.message || "Username update failed");
-
-      // Update local stored user (optional but nice)
-      const user = JSON.parse(localStorage.getItem("authUser") || "{}");
-      user.username = data.username;
-      localStorage.setItem("authUser", JSON.stringify(user));
-
-      showToast("Username updated!", "success", 1200);
-
-      setTimeout(() => (window.location.href = "settings.html"), 900);
-    } catch (err) {
-      showToast(err.message, "error", 1200);
-    }
-  });
 }
 
 const changePWForm = document.getElementById("changePWForm");

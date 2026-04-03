@@ -768,3 +768,181 @@ input:checked + .slider:before { transform: translateX(26px); }
         transform: translateY(-10px);
     }
 }
+
+/* =========================
+   COMMUNITY PAGE
+========================= */
+
+.community-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+/* Page Title */
+
+.community-title {
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    color: #ffffff;
+}
+
+
+/* =========================
+   CREATE POST BOX
+========================= */
+
+.post-box {
+    background: #2a2a2a;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 30px;
+}
+
+.post-box textarea {
+    width: 100%;
+    height: 80px;
+    resize: none;
+    border: none;
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 14px;
+}
+
+.post-box textarea:focus {
+    outline: none;
+}
+
+.post-box input[type="file"] {
+    margin-top: 10px;
+}
+
+.post-box button {
+    margin-top: 10px;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    background: #0077ff;
+    color: white;
+    cursor: pointer;
+}
+
+.post-box button:hover {
+    background: #005fcc;
+}
+
+
+/* =========================
+   POST FEED
+========================= */
+
+.post {
+    background: #2a2a2a;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.post-content {
+    font-size: 15px;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+/* Post Image */
+
+.post img {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+
+/* =========================
+   POST ACTIONS
+========================= */
+
+.post-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.post-actions button {
+    background: #3b3b3b;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+}
+
+.post-actions button:hover {
+    background: #555;
+}
+
+
+/* =========================
+   COMMENTS SECTION
+========================= */
+
+.comment-section {
+    margin-top: 15px;
+}
+
+.comment-input {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.comment-input input {
+    flex: 1;
+    padding: 8px;
+    border-radius: 6px;
+    border: none;
+}
+
+.comment-input button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    background: #0077ff;
+    color: white;
+    cursor: pointer;
+}
+
+.comment-input button:hover {
+    background: #005fcc;
+}
+
+
+/* Individual Comment */
+
+.comment {
+    background: #1f1f1f;
+    padding: 8px 10px;
+    border-radius: 6px;
+    margin-top: 6px;
+    font-size: 14px;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+
+.community-container {
+    padding: 10px;
+}
+
+.post img {
+    max-height: 250px;
+}
+
+}

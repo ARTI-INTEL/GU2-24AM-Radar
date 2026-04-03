@@ -1,0 +1,55 @@
+<!--
+File: community.html
+Project: 24Air Radar
+Author: Muhammad Faiq Imran
+Last Modified: 15/03/2026
+
+Description:
+  This file serves as the community page for the 24Air Radar application. 
+  It allows users to create posts, like posts, and add comments.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Community • 24Air Radar</title>
+  <link rel="stylesheet" href="../styles/style.css" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+</head>
+
+<body class="auth-page">
+
+  <!-- Page title (same pattern as Register/Login) -->
+    <header class="navbar">
+        <div class="logo">24Air Radar Community Page</div>
+        <a href="map.html" class="settings">Back to map</a>
+    </header>
+
+  <div class="auth-wrap">
+
+    <!-- Big rounded panel (reuses your .card base styling) -->
+    <section class="card settings-panel">
+
+      <div class="community-container">
+
+        <form class="post-box" id="postForm">
+        <textarea name="content" placeholder="Share something about aviation..."></textarea>
+
+        <input type="file" name="image" accept=".png,.jpeg,.svg">
+        <p>Only .png, .jpeg, and .svg files are allowed.</p>
+
+        <button type="submit">Post</button>
+        </form>
+
+        <div id="posts"></div>
+
+        </div>
+    </section>
+  </div>
+
+  <script src="../scripts/community.js"></script>
+</body>
+</html>

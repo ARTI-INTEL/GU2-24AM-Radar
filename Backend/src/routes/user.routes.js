@@ -18,27 +18,6 @@ import { requireAuth } from "../middleware/auth.middleware.js";
 
 export const userRouter = express.Router();
 
-// PATCH /api/user/username
-userRouter.patch("/username", requireAuth, async (req, res) => {
-  try {
-    const { newUsername } = req.body ?? {};
-    if (!newUsername || String(newUsername).trim().length < 3) {
-      return res.status(400).json({ message: "Username must be at least 3 characters" });
-    }
-
-    const clean = String(newUsername).trim();
-
-    await pool.query(
-      "UPDATE `user` SET `Username` = ? WHERE `UserID` = ?",
-      [clean, req.user.userId]
-    );
-
-    return res.json({ message: "Username updated", username: clean });
-  } catch (err) {
-    return res.status(500).json({ message: "Server error", error: String(err.message || err) });
-  }
-});
-
 // PATCH /api/user/password
 userRouter.patch("/password", requireAuth, async (req, res) => {
   try {
