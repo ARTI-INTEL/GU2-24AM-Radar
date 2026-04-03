@@ -15,6 +15,10 @@ Dependencies:
   - Express.js 
 */
 
+document.querySelectorAll("a.back").forEach(link => {
+    link.innerHTML = "<i class='bx bx-arrow-back'></i>";
+});
+
 // ================== SHOW / HIDE PASSWORD ==================
 function setupPasswordToggles() {
   const toggleButtons = document.querySelectorAll(".toggle-password");
@@ -73,7 +77,7 @@ function showToast(message, type = "info", duration = 2500) {
 
 // Protects pages that require authentication
 
-const protectedPages = ["map.html", "settings.html", "changePW.html"];
+const protectedPages = ["map.html", "settings.html", "changePW.html", "community.html"];
 
 if (protectedPages.some(p => window.location.pathname.includes(p))) {
   if (!localStorage.getItem("authToken")) {

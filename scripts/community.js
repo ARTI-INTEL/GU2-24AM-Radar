@@ -17,6 +17,24 @@ const API = "http://localhost:5000/api/community";
 
 const postsDiv = document.getElementById("posts");
 
+// Posts timestamp formatter
+function formatTime(dateString) {
+
+  const date = new Date(dateString);
+  const now = new Date();
+
+  const diff = Math.floor((now - date) / 1000);
+
+  if (diff < 60) return "Just now";
+
+  if (diff < 3600) return Math.floor(diff / 60) + " min ago";
+
+  if (diff < 86400) return Math.floor(diff / 3600) + " hours ago";
+
+  return date.toLocaleDateString() + " " + date.toLocaleTimeString();
+
+}
+
 /* LOAD POSTS */
 
 async function loadPosts() {
@@ -32,31 +50,47 @@ async function loadPosts() {
       postEl.className = "post";
 
       postEl.innerHTML = `
-        <p>${post.content}</p>
 
-        ${
-          post.image_url
-            ? `<img src="http://localhost:5000/uploads/${post.image_url}" width="300">`
-            : ""
-        }
+      <div class="post-header">
+        <img class="post-avatar"
+            src="${post.UserProfile || '../images/default-avatar.png'}">
+        <div>
+          <div class="post-username">
+            ${post.Username}
+          </div>
+          <div class="post-time">
+            ${formatTime(post.created_at)}
+          </div>
+        </div>
+      </div>
 
-        <br>
+      <div class="post-content">
+        ${post.content}
+      </div>
 
-        ❤️ ${post.likes}
+      ${post.image_url ? `<img class="post-image" src="../backend/src/uploads/${post.image_url}">` : ""}
 
-        <button onclick="likePost(${post.id})">Like</button>
+      <div class="post-actions">
 
-        <br>
+        <button onclick="likePost(${post.id})">
+          ❤️ ${post.likes}
+        </button>
 
-        <input id="comment-${post.id}" placeholder="Comment">
+      </div>
 
-        <button onclick="commentPost(${post.id})">Send</button>
+      <div class="comment-box">
 
-        <div id="comments-${post.id}"></div>
+        <input id="comment-${post.id}" placeholder="Write a comment...">
 
-        <hr>
+        <button class="primary-btn" onclick="commentPost(${post.id})">
+          Comment
+        </button>
+
+      </div>
+
+      <div id="comments-${post.id}"></div>
+
       `;
-
       postsDiv.appendChild(postEl);
 
       loadComments(post.id);
@@ -161,7 +195,16 @@ async function loadComments(postId) {
     container.innerHTML = "";
 
     comments.forEach(c => {
-      container.innerHTML += `<p>${c.comment}</p>`;
+      container.innerHTML += `
+        <div class="comment">
+
+          <b>${c.Username}</b>: ${c.comment}
+
+          <span class="comment-time">
+            ${formatTime(c.created_at)}
+          </span>
+
+        </div>`;
     });
 
   } catch (err) {

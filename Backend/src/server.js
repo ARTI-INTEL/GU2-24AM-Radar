@@ -46,13 +46,14 @@ app.use(
         "script-src": ["'self'", "https://unpkg.com"],
         "style-src": ["'self'", "'unsafe-inline'", "https://unpkg.com"],
         "img-src": [
-          "'self'",
-          "data:",
-          "blob:",
-          "https://*.tile.openstreetmap.org",
-          "https://*.basemaps.cartocdn.com",
-          "https://tile.openweathermap.org"
-        ],
+                      "'self'",
+                      "data:",
+                      "blob:",
+                      "http://localhost:5000",   // ← add this
+                      "https://*.tile.openstreetmap.org",
+                      "https://*.basemaps.cartocdn.com",
+                      "https://tile.openweathermap.org"
+                    ],
         "connect-src": [
           "'self'",
           "https://tile.openweathermap.org",
@@ -96,7 +97,7 @@ app.use("/api/user", userRouter);
 app.use("/api/airports", airportsRouter);
 app.use("/api/aircraft", aircraftRouter);
 app.use("/api/community", communityRoutes);
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static("src/uploads"));
 
 // DB CLEANUP - remove aircraft not updated in the last 5 minutes
 setInterval(async () => {

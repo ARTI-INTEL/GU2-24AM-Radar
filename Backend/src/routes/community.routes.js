@@ -50,21 +50,22 @@ router.post("/post", upload.single("image"), async (req, res) => {
 /* GET POSTS */
 
 router.get("/posts", async (req, res) => {
-  try {
-    const sql = `
-      SELECT posts.*, 
+
+  const sql = `
+    SELECT 
+      posts.*,
+      user.Username,
+      user.UserProfile,
       (SELECT COUNT(*) FROM post_likes WHERE post_id = posts.id) as likes
-      FROM posts
-      ORDER BY created_at DESC
-    `;
+    FROM posts
+    JOIN user ON posts.user_id = user.UserID
+    ORDER BY posts.created_at DESC
+  `;
 
-    const [posts] = await pool.query(sql);
+  const [posts] = await pool.query(sql);
 
-    res.json(posts);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to load posts" });
-  }
+  res.json(posts);
+
 });
 
 /* LIKE POST */
@@ -106,16 +107,22 @@ router.post("/comment", async (req, res) => {
 /* GET COMMENTS */
 
 router.get("/comments/:postId", async (req, res) => {
-  try {
-    const sql = "SELECT * FROM comments WHERE post_id=?";
 
-    const [comments] = await pool.query(sql, [req.params.postId]);
+  const sql = `
+    SELECT 
+      comments.comment,
+      comments.created_at,
+      user.Username
+    FROM comments
+    JOIN user ON comments.user_id = user.UserID
+    WHERE comments.post_id = ?
+    ORDER BY comments.created_at ASC
+  `;
 
-    res.json(comments);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to load comments" });
-  }
+  const [comments] = await pool.query(sql, [req.params.postId]);
+
+  res.json(comments);
+
 });
 
 export default router;

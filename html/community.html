@@ -25,31 +25,33 @@ Description:
   <!-- Page title (same pattern as Register/Login) -->
     <header class="navbar">
         <div class="logo">24Air Radar Community Page</div>
-        <a href="map.html" class="settings">Back to map</a>
+        <a href="map.html" class="back">Back to map</a>
+
     </header>
 
   <div class="auth-wrap">
 
     <!-- Big rounded panel (reuses your .card base styling) -->
-    <section class="card settings-panel">
+    <section class="community-container">
 
-      <div class="community-container">
+      <form id="postForm" class="create-post">
 
-        <form class="post-box" id="postForm">
         <textarea name="content" placeholder="Share something about aviation..."></textarea>
 
-        <input type="file" name="image" accept=".png,.jpeg,.svg">
-        <p>Only .png, .jpeg, and .svg files are allowed.</p>
-
-        <button type="submit">Post</button>
-        </form>
-
-        <div id="posts"></div>
-
+        <div class="post-actions-bar">
+          <input type="file" name="image" accept="image/*" title="Upload Image">
+          <button type="submit">Post</button>
         </div>
+
+      </form>
+
+      <div id="posts" class="feed"></div>
+
     </section>
+
   </div>
 
   <script src="../scripts/community.js"></script>
+  <script src="../scripts/script.js"></script>
 </body>
 </html>

@@ -25,6 +25,10 @@ var map = L.map('map', {
   maxZoom: 19
 });
 
+
+// API base URL (adjust if backend is hosted elsewhere)
+// const API_BASE = "http://localhost:5000";
+
 // ===============================
 // API STATUS + LAST UPDATE
 // ===============================
