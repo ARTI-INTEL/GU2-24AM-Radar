@@ -98,7 +98,7 @@ app.use("/api/user", userRouter);
 app.use("/api/airports", airportsRouter);
 app.use("/api/aircraft", aircraftRouter);
 app.use("/api/community", communityRoutes);
-app.use("/uploads", express.static("src/uploads"));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // DB CLEANUP - remove aircraft not updated in the last 5 minutes
 setInterval(async () => {
@@ -137,4 +137,4 @@ app.use((req, res) => {
 });
 
 const port = Number(process.env.PORT || 8080);
-app.listen(port, () => console.log(`Running on ${port}`));
+app.listen(port, () => console.log(`24Air Radar server running on http://localhost:${port}`));

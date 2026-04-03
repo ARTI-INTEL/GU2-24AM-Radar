@@ -68,7 +68,7 @@ async function loadPosts() {
         ${post.content}
       </div>
 
-      ${post.image_url ? `<img class="post-image" src="api/uploads/${post.image_url}">` : ""}
+      ${post.image_url ? `<img class="post-image" src="/uploads/${post.image_url}">` : ""}
 
       <div class="post-actions">
 
