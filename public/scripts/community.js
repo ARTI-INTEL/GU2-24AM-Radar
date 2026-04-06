@@ -213,6 +213,46 @@ async function loadComments(postId) {
 
 }
 
+async function loadNews() {
+
+  try {
+
+    const res = await fetch(
+      "https://newsapi.org/v2/everything?q=aviation&sortBy=publishedAt&apiKey=YOUR_KEY"
+    );
+
+    const data = await res.json();
+
+    const newsContainer = document.getElementById("news");
+
+    newsContainer.innerHTML = "";
+
+    if (!data.articles) {
+      newsContainer.innerHTML = "<p>News unavailable.</p>";
+      return;
+    }
+
+    data.articles.slice(0,5).forEach(article => {
+
+      newsContainer.innerHTML += `
+        <div class="news-item">
+          <b>${article.title}</b>
+          <br>
+          <a href="${article.url}" target="_blank">Read more</a>
+        </div>
+      `;
+
+    });
+
+  } catch (err) {
+
+    console.error("News failed:", err);
+
+  }
+
+}
+
 /* INITIAL LOAD */
 
 loadPosts();
+loadNews();

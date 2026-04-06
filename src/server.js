@@ -59,7 +59,8 @@ app.use(
           "https://unpkg.com",
           "https://tile.openweathermap.org",
           "https://*.basemaps.cartocdn.com",
-          "https://*.tile.openstreetmap.org"
+          "https://*.tile.openstreetmap.org",
+          "https://newsapi.org"
         ],
         "worker-src": ["'self'", "blob:"]
       }

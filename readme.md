@@ -27,6 +27,7 @@ The system demonstrates full-stack web development including frontend UI design,
 • User authentication system (login/register)
 • User settings page
 • Responsive UI for desktop and mobile devices
+• Users can discuss aviation industry in our community page and post photos for other users to see.
 
 ---
 
@@ -46,6 +47,10 @@ Node.js
 Express.js
 dotenv
 mysql2
+multer
+nodemailer
+bycrypt
+
 
 ## Database
 
@@ -73,7 +78,7 @@ A modern web browser (Chrome, Edge, Firefox)
 
 ## 1. Clone the Repository
 
-git clone https://github.com/yourusername/24air-radar.git
+git clone https://github.com/ARTI-INTEL/GU2-24Air-Radar
 
 Navigate into the project folder:
 
@@ -83,7 +88,7 @@ cd 24air-radar
 
 ## 2. Install Backend Dependencies
 
-Navigate to the backend folder and install dependencies:
+Install dependencies:
 
 npm install
 
@@ -134,31 +139,78 @@ npm run dev
 
 ## 6. Launch the Frontend
 
-Open the main HTML file in your browser:
+Click the link provided in the IDE Terminal
 
-html/index.html
-
-The application interface will.
+24Air Radar Server Running on http://localhost:5500 (click this link)
 ---
 
 # Project Structure
 
 24Air-Radar
+├───node_modules
+│   .config
+│   .env
+│   .gitignore
+│   package-lock.json
+│   package.json
+│   readme.md
+│   
+├───public
+│   ├───html
+│   │       404.html
+│   │       changePW.html
+│   │       community.html
+│   │       forgotPW.html
+│   │       index.html
+│   │       login.html
+│   │       map.html
+│   │       newPW.html
+│   │       register.html
+│   │       settings.html
+│   │
+│   ├───images
+│   │       airport.png
+│   │       default-avatar.png
+│   │       plane.png
+│   │
+│   ├───scripts
+│   │       community.js
+│   │       map.js
+│   │       script.js
+│   │
+│   └───styles
+│           index.css
+│           style.css
 │
-├── Backend
-│   ├── src
-│   │   ├── routes
-│   │   ├── controllers
-│   │   ├── jobs
-│   │   └── server.js
-│
-├── html
-├── css
-├── scripts
-├── images
-│
-│
-└── README.md
+└───src
+    │   db.js
+    │   openskyToken.js
+    │   server.js
+    │
+    ├───jobs
+    │       aircraftPoller.js
+    │
+    ├───middleware
+    │       auth.middleware.js
+    │
+    ├───routes
+    │       aircraft.routes.js
+    │       airports.routes.js
+    │       auth.routes.js
+    │       community.routes.js
+    │       user.routes.js
+    │
+    ├───uploads
+    │       1775214541084-Screenshot 2026-02-27 200052.png
+    │
+    └───utils
+            mailer.js
+
+---
+
+# Database Structure
+
+(Add DB Structure)
 
 ---
 
@@ -176,14 +228,12 @@ Authenticates a user.
 POST /api/auth/register
 Creates a new user account.
 
-PATCH /api/user/username
-Updates a user's username.
-
+(Add Community)
 ---
 
 # Author
 
-Muhammad Faiq Imran
+Name: Muhammad Faiq Imran
 Organization: University Of Stirling
 
 ---

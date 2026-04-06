@@ -32,20 +32,45 @@ Description:
   <div class="auth-wrap">
 
     <!-- Big rounded panel (reuses your .card base styling) -->
-    <section class="community-container">
+    <section class="community-layout">
+      <!-- LEFT COLUMN (POSTS) -->
+      <div class="posts-column">
+        <!-- Create Post -->
+        <form id="postForm" class="create-post">
 
-      <form id="postForm" class="create-post">
+          <textarea name="content" placeholder="Share something about aviation..."></textarea>
 
-        <textarea name="content" placeholder="Share something about aviation..."></textarea>
+          <div class="post-actions-bar">
+            <input type="file" name="image" accept="image/*" title="Upload Image">
+            <button type="submit">Post</button>
+          </div>
 
-        <div class="post-actions-bar">
-          <input type="file" name="image" accept="image/*" title="Upload Image">
-          <button type="submit">Post</button>
+        </form>
+
+        <!-- Posts Feed -->
+        <div id="posts" class="feed"></div>
+
+      </div>
+
+
+      <!-- RIGHT COLUMN (AVIATION NEWS) -->
+      <aside class="news-column">
+
+        <div class="news-card">
+
+          <h3>✈ Aviation News</h3>
+
+          <div id="news">
+
+            <div class="news-item">
+              <p>Loading aviation news...</p>
+            </div>
+
+          </div>
+
         </div>
 
-      </form>
-
-      <div id="posts" class="feed"></div>
+      </aside>
 
     </section>
 
