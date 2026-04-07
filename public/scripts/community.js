@@ -111,7 +111,7 @@ document.getElementById("postForm").addEventListener("submit", async e => {
 
   try {
 
-    await fetch(`${API_BASE}/post`, {
+    await fetch(`${API_BASE}/api/community/post`, {
       method: "POST",
       body: formData
     });
