@@ -50,6 +50,7 @@ mysql2
 multer
 nodemailer
 bycrypt
+multer
 
 
 ## Database
@@ -61,6 +62,7 @@ MySQL
 OpenSky Network API
 Terminator Daynight Map API
 Openweather Weather Map API
+apitube News API
 
 ---
 
@@ -100,13 +102,29 @@ Create a file called `.env` inside the backend folder.
 
 Example configuration:
 
-OPENSKY_CLIENT_ID=your_opensky_id
-OPENSKY_CLIENT_SECRET=your_opensky_secret
+PORT=your port
 
 DB_HOST=localhost
 DB_USER=root
-DB_PASSWORD=yourpassword
-DB_NAME=24air_radar
+DB_PASSWORD='db password'
+DB_NAME=db/schema name
+
+JWT_SECRET=create a jwt secret here
+JWT_EXPIRES_IN=7d
+
+OPENSKY_CLIENT_ID=your api details here
+OPENSKY_CLIENT_SECRET=your api details here
+
+NEWS_API_KEY=your api details here
+
+CORS_ORIGIN=http://127.0.0.1:(your port)
+
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USER=your email
+MAIL_PASS="your email pass"
+
+RESET_LINK_BASE=http://localhost:(yourport)/html/newPW.html
 
 ---
 
@@ -114,9 +132,11 @@ DB_NAME=24air_radar
 
 Create the database in MySQL:
 
-CREATE DATABASE 24air_radar;
+Open the file database.sql in config folder:
 
-Import the provided SQL schema file.
+'24Air Radar/config/database.sql'
+
+copy the query in it and run it in your mysql database.
 
 ---
 
@@ -126,12 +146,12 @@ First open command promt for the backend directory by:
 
 Opening Command promt and running:
 
-cd C:\Users\faiqi\Documents\Coding\VS Code Codes\Assignments\GU2 24Air Radar\Backend
+cd C:\Users\(user)\Downloads\GU2 24Air Radar
 
 Or
-Right clicking the backend folder in file explorer and click Open in Terminal
+Right clicking the Project folder in file explorer and click Open in Terminal
 
-Run the backend server:
+Run the server:
 
 npm run dev
 
@@ -148,14 +168,24 @@ Click the link provided in the IDE Terminal
 
 24Air-Radar
 ├───node_modules
-│   .config
 │   .env
 │   .gitignore
 │   package-lock.json
 │   package.json
 │   readme.md
 │   
+├───config
+│       database.sql
+│       
+├───logs
+│       .gitkeep
+│       2026-04-07-access.log
+│       2026-04-07-app.log
+│       
 ├───public
+│   │   robots.txt
+│   │   sitemap.xml
+│   │   
 │   ├───html
 │   │       404.html
 │   │       changePW.html
@@ -167,50 +197,125 @@ Click the link provided in the IDE Terminal
 │   │       newPW.html
 │   │       register.html
 │   │       settings.html
-│   │
+│   │       
 │   ├───images
 │   │       airport.png
 │   │       default-avatar.png
 │   │       plane.png
-│   │
+│   │       
 │   ├───scripts
 │   │       community.js
 │   │       map.js
 │   │       script.js
-│   │
+│   │       
 │   └───styles
 │           index.css
 │           style.css
-│
+│           
 └───src
     │   db.js
     │   openskyToken.js
     │   server.js
-    │
+    │   
     ├───jobs
     │       aircraftPoller.js
-    │
+    │       newsPoller.js
+    │       
     ├───middleware
     │       auth.middleware.js
-    │
+    │       
     ├───routes
     │       aircraft.routes.js
     │       airports.routes.js
     │       auth.routes.js
     │       community.routes.js
     │       user.routes.js
-    │
+    │       
     ├───uploads
-    │       1775214541084-Screenshot 2026-02-27 200052.png
-    │
+    │       profile-img-1775503230023.jpeg
+    │       
     └───utils
+            logger.js
             mailer.js
 
 ---
 
 # Database Structure
 
-(Add DB Structure)
+24airradar
+│
+├───aircraft_latest
+│       icao24 (PK)
+│       callsign
+│       origin_country
+│       latitude
+│       longitude
+│       baro_altitude
+│       velocity
+│       true_track
+│       vertical_rate
+│       on_ground
+│       squawk
+│       time_position
+│       last_contact
+│       updated_at
+│
+├───aircraft_positions
+│       id (PK)
+│       icao
+│       time
+│       lat
+│       lon
+│
+├───airport
+│       idAirport (PK)
+│       Name
+│       City
+│       Country
+│       IATA
+│       ICAO
+│       Longitude
+│       latidude
+│
+├───comments
+│       id (PK)
+│       post_id
+│       user_id
+│       comment
+│       created_at
+│
+├───news_cache
+│       id (PK)
+│       title
+│       url
+│       fetched_at
+│
+├───password_resets
+│       id (PK)
+│       user_id
+│       token_hash
+│       expires_at
+│       used_at
+│       created_at
+│
+├───posts
+│       id (PK)
+│       user_id
+│       content
+│       image_url
+│       created_at
+│
+├───post_likes
+│       id (PK)
+│       post_id
+│       user_id
+│
+└───user
+        UserID (PK)
+        UserEmail
+        Username
+        UserProfile
+        Password
 
 ---
 
@@ -235,5 +340,6 @@ Creates a new user account.
 
 Name: Muhammad Faiq Imran
 Organization: University Of Stirling
+Last Updated: 07/04/2026
 
 ---
