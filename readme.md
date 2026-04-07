@@ -321,19 +321,63 @@ Click the link provided in the IDE Terminal
 
 # API Endpoints
 
-GET /api/aircraft
-Returns aircraft positions currently tracked by the system.
-
-GET /api/aircraft/:id
-Returns detailed information about a specific aircraft.
+## Authentication
+POST /api/auth/register
+Registers a new user account. Body: { email, username, password }
 
 POST /api/auth/login
-Authenticates a user.
+Authenticates a user and returns a JWT token. Body: { email, password }
 
-POST /api/auth/register
-Creates a new user account.
+POST /api/auth/forgot-password
+Sends a password reset link to the provided email. Body: { email }
 
-(Add Community)
+POST /api/auth/reset-password
+Resets the user's password using a valid reset token. Body: { token, newPassword }
+
+## User
+PATCH /api/user/password
+Updates the authenticated user's password. Requires Bearer token. Body: { currentPassword, newPassword }
+
+PATCH /api/user/avatar
+Uploads and updates the authenticated user's profile picture. Requires Bearer token. Body: multipart/form-data { avatar: file }
+
+## Aircraft
+GET /api/aircraft?minLat=&maxLat=&minLon=&maxLon=
+Returns all aircraft currently within the specified bounding box.
+
+GET /api/aircraft/:icao/track
+Returns the past position history of a specific aircraft by ICAO24 code.
+
+## Airports
+GET /api/airports?minLat=&maxLat=&minLon=&maxLon=
+Returns all airports within the specified bounding box.
+
+GET /api/airports/search?q=
+Searches airports by name, city, IATA code, ICAO code, or country.
+
+## Community
+POST /api/community/post
+Creates a new community post. Body: multipart/form-data { content, user_id, image (optional) }
+
+GET /api/community/posts
+Returns all community posts ordered by most recent.
+
+POST /api/community/like
+Likes a post. Body: { post_id, user_id }
+
+POST /api/community/comment
+Adds a comment to a post. Body: { post_id, user_id, comment }
+
+GET /api/community/comments/:postId
+Returns all comments for a specific post.
+
+GET /api/community/news
+Returns the latest cached aviation news articles.
+
+## System
+GET /health
+Returns the server and database connection status.
+
 ---
 
 # Author
