@@ -13,8 +13,6 @@ Dependencies:
   - Express.js 
 */
 
-// const API_BASE = "http://localhost:5500/api/community";
-
 const postsDiv = document.getElementById("posts");
 
 // Posts timestamp formatter
@@ -53,7 +51,7 @@ async function loadPosts() {
 
       <div class="post-header">
         <img class="post-avatar"
-            src="${post.UserProfile || '../images/default-avatar.png'}">
+            src="${post.UserProfile ? `/uploads/${post.UserProfile}` : '../images/default-avatar.png'}"
         <div>
           <div class="post-username">
             ${post.Username}
@@ -214,42 +212,34 @@ async function loadComments(postId) {
 }
 
 async function loadNews() {
-
   try {
+    const res = await fetch(`${API_BASE}/api/community/news`);
 
-    const res = await fetch(
-      "https://newsapi.org/v2/everything?q=aviation&sortBy=publishedAt&apiKey=YOUR_KEY"
-    );
-
-    const data = await res.json();
+    const articles = await res.json();
+    console.log("News API response:", articles); // check terminal
 
     const newsContainer = document.getElementById("news");
-
     newsContainer.innerHTML = "";
 
-    if (!data.articles) {
+    if (!Array.isArray(articles) || articles.length === 0) {
       newsContainer.innerHTML = "<p>News unavailable.</p>";
       return;
     }
 
-    data.articles.slice(0,5).forEach(article => {
-
+    articles.forEach(article => {
       newsContainer.innerHTML += `
         <div class="news-item">
-          <b>${article.title}</b>
+          <b>${article.title || "No title"}</b>
           <br>
           <a href="${article.url}" target="_blank">Read more</a>
         </div>
       `;
-
     });
 
   } catch (err) {
-
     console.error("News failed:", err);
-
+    document.getElementById("news").innerHTML = "<p>News unavailable.</p>";
   }
-
 }
 
 /* INITIAL LOAD */

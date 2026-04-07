@@ -357,3 +357,70 @@ if (resetPWForm) {
     }
   });
 }
+
+// ================== PROFILE PICTURE ==================
+const avatarWrap  = document.getElementById("avatarWrap");
+const avatarInput = document.getElementById("avatarInput");
+const avatarImg   = document.getElementById("avatarImg");
+const avatarIcon  = document.getElementById("avatarIcon");
+
+// Show saved profile picture on page load
+function loadAvatar() {
+  if (!avatarImg) return;
+
+  const user = JSON.parse(localStorage.getItem("authUser") || "{}");
+
+  if (user.profilePic) {
+    avatarImg.src = `/uploads/${user.profilePic}`;
+    avatarImg.style.display = "block";
+    if (avatarIcon) avatarIcon.style.display = "none";
+  }
+}
+
+loadAvatar();
+
+// Open file picker when avatar is clicked
+if (avatarWrap && avatarInput) {
+  avatarWrap.addEventListener("click", () => avatarInput.click());
+}
+
+// Upload immediately after a file is chosen
+if (avatarInput) {
+  avatarInput.addEventListener("change", async () => {
+    const file = avatarInput.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("avatar", file);
+
+    showToast("Uploading profile picture...", "info", 1500);
+
+    try {
+      const res = await fetch(`${API_BASE}/api/user/avatar`, {
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${getToken()}` },
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Upload failed");
+
+      // Update localStorage so the new pic persists across pages
+      const user = JSON.parse(localStorage.getItem("authUser") || "{}");
+      user.profilePic = data.filename;
+      localStorage.setItem("authUser", JSON.stringify(user));
+
+      // Refresh avatar display immediately
+      avatarImg.src = `/uploads/${data.filename}`;
+      avatarImg.style.display = "block";
+      if (avatarIcon) avatarIcon.style.display = "none";
+
+      showToast("Profile picture updated!", "success", 2000);
+    } catch (err) {
+      showToast(err.message, "error", 2500);
+    }
+
+    // Reset input so the same file can be re-selected if needed
+    avatarInput.value = "";
+  });
+}

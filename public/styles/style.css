@@ -962,8 +962,8 @@ input:checked + .slider:before { transform: translateX(26px); }
 /* NEWS CARD */
 
 .news-card{
-    background:#1a1a1b;
-    border:1px solid #343536;
+    background: var(--card-color);
+    border:1px solid var(--secondary-bg);
     border-radius:8px;
     padding:15px;
 }
@@ -976,7 +976,7 @@ input:checked + .slider:before { transform: translateX(26px); }
 
 .news-item{
     padding:10px 0;
-    border-bottom:1px solid #343536;
+    border-bottom:1px solid var(--bg-color);
 }
 
 .news-item:last-child{
@@ -1062,4 +1062,67 @@ input:checked + .slider:before { transform: translateX(26px); }
         max-width: 100%;
         height: auto;
     }
+}
+
+/* ===============================
+   LOCATE ME MAP BUTTON
+=============================== */
+.locate-me-btn {
+  width: 36px;
+  height: 36px;
+  background: var(--card-color);
+  border: none;
+  border-radius: 8px;
+  color: var(--fg-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  transition: background 0.2s;
+}
+
+.locate-me-btn:hover {
+  background: var(--secondary-bg);
+}
+
+.locate-me-btn.locating svg {
+  animation: locateSpin 1s linear infinite;
+  opacity: 0.6;
+}
+
+@keyframes locateSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ===============================
+   SETTINGS AVATAR UPLOAD
+=============================== */
+.settings-avatar {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.avatar-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.avatar-overlay i {
+  font-size: 30px;
+  color: #fff;
+  margin: 0;
+}
+
+.settings-avatar:hover .avatar-overlay {
+  opacity: 1;
 }

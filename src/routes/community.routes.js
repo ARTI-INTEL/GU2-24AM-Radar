@@ -14,15 +14,16 @@
 import express from "express";
 import multer from "multer";
 import { pool } from "../db.js";
+import path from "path";
 
 const router = express.Router();
 
-/* MULTER CONFIG */
-
+// The storage config
 const storage = multer.diskStorage({
   destination: "src/uploads/",
   filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
+    const ext = path.extname(file.originalname);
+    cb(null, `post-img-${Date.now()}${ext}`);
   },
 });
 
@@ -123,6 +124,25 @@ router.get("/comments/:postId", async (req, res) => {
 
   res.json(comments);
 
+});
+
+/* GET AVIATION NEWS */
+
+router.get("/news", async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT title, url FROM news_cache ORDER BY fetched_at DESC LIMIT 5"
+    );
+
+    if (!rows.length) {
+      return res.json([]);
+    }
+
+    res.json(rows);
+  } catch (err) {
+    console.error("News route failed:", err.message);
+    res.status(500).json({ error: "Failed to fetch news" });
+  }
 });
 
 export default router;

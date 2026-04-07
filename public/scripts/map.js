@@ -18,20 +18,19 @@ Dependencies:
   - Express.js
 */
 
+// Restore last saved position (or default to Dubai)
+const _savedPos = JSON.parse(localStorage.getItem("mapLastPos") || "null");
+const _initCenter = _savedPos ? [_savedPos.lat, _savedPos.lng] : [25.276987, 55.296249];
+const _initZoom   = _savedPos ? _savedPos.zoom : 8;
+
 var map = L.map('map', {
-  center: [25.276987, 55.296249],
-  zoom: 8,
+  center: _initCenter,
+  zoom: _initZoom,
   minZoom: 2.299,
   maxZoom: 19
 });
 
-
-// API base URL (adjust if backend is hosted elsewhere)
-// const API_BASE = "http://localhost:5000";
-
-// ===============================
 // API STATUS + LAST UPDATE
-// ===============================
 const lastUpdEl = document.getElementById("lastUpd");
 const apiStatusEl = document.getElementById("connectedStatus");
 
@@ -159,6 +158,18 @@ weatherToggle.addEventListener("change", function () {
 // ✅ Extra safety: if any interaction pushes it, snap back inside bounds
 map.on("drag", () => map.panInsideBounds(worldBounds, { animate: false }));
 map.on("zoomend", () => map.panInsideBounds(worldBounds, { animate: false }));
+
+// ===============================
+// SAVE MAP POSITION ON MOVE
+// ===============================
+map.on("moveend", () => {
+  const c = map.getCenter();
+  localStorage.setItem("mapLastPos", JSON.stringify({
+    lat: c.lat,
+    lng: c.lng,
+    zoom: map.getZoom()
+  }));
+});
 
 // --- Airports Layer ---
 const airportToggle = document.getElementById("airportToggle");
@@ -747,6 +758,76 @@ map.on("click", () => {
     headingLine = null;
   }
 });
+
+// ===============================
+// LOCATE ME BUTTON
+// ===============================
+const LocateMeControl = L.Control.extend({
+  options: { position: "topright" },
+
+  onAdd() {
+    const btn = L.DomUtil.create("button", "locate-me-btn");
+    btn.title = "Go to my location";
+    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+      <circle cx="12" cy="12" r="9" stroke-dasharray="2 4"/>
+    </svg>`;
+
+    L.DomEvent.on(btn, "click", L.DomEvent.stopPropagation);
+    L.DomEvent.on(btn, "click", L.DomEvent.preventDefault);
+    L.DomEvent.on(btn, "click", () => {
+      if (!navigator.geolocation) {
+        showLocateToast("Geolocation not supported by your browser.", "error");
+        return;
+      }
+
+      btn.classList.add("locating");
+      btn.title = "Locating...";
+
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const { latitude: lat, longitude: lng } = pos.coords;
+          map.setView([lat, lng], 12, { animate: true });
+
+          // Drop a temporary pulse marker
+          if (window._locateMarker) map.removeLayer(window._locateMarker);
+          window._locateMarker = L.circleMarker([lat, lng], {
+            radius: 10,
+            fillColor: "#2f79ff",
+            fillOpacity: 0.9,
+            color: "#ffffff",
+            weight: 3
+          }).addTo(map).bindPopup("Your location").openPopup();
+
+          btn.classList.remove("locating");
+          btn.title = "Go to my location";
+        },
+        (err) => {
+          const msgs = {
+            1: "Location access was denied.",
+            2: "Location unavailable.",
+            3: "Location request timed out."
+          };
+          showLocateToast(msgs[err.code] || "Could not get location.", "error");
+          btn.classList.remove("locating");
+          btn.title = "Go to my location";
+        },
+        { timeout: 10000 }
+      );
+    });
+
+    return btn;
+  }
+});
+
+new LocateMeControl().addTo(map);
+
+function showLocateToast(msg, type) {
+  // reuse your existing showToast if available, else console
+  if (typeof showToast === "function") showToast(msg, type, 2500);
+  else console.warn(msg);
+}
 
 // API health check every 30 seconds
 async function checkApiHealth() {

@@ -32,8 +32,10 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { startAircraftPoller } from "./jobs/aircraftPoller.js";
 import communityRoutes from "./routes/community.routes.js";
+import { startNewsPoller } from "./jobs/newsPoller.js";
 
 startAircraftPoller();
+startNewsPoller();
 
 const app = express();
 
@@ -59,8 +61,7 @@ app.use(
           "https://unpkg.com",
           "https://tile.openweathermap.org",
           "https://*.basemaps.cartocdn.com",
-          "https://*.tile.openstreetmap.org",
-          "https://newsapi.org"
+          "https://*.tile.openstreetmap.org"
         ],
         "worker-src": ["'self'", "blob:"]
       }
