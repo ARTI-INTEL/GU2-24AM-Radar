@@ -1,0 +1,27 @@
+# robots.txt
+# Project: 24Air Radar
+# Author: Muhammad Faiq Imran
+
+User-agent: *
+
+# Allow public-facing pages
+Allow: /
+Allow: /html/index.html
+Allow: /html/login.html
+Allow: /html/register.html
+Allow: /html/forgotPW.html
+
+# Block internal / authenticated pages
+Disallow: /html/map.html
+Disallow: /html/settings.html
+Disallow: /html/changePW.html
+Disallow: /html/newPW.html
+Disallow: /html/community.html
+
+# Block API endpoints entirely
+Disallow: /api/
+Disallow: /uploads/
+Disallow: /health
+
+# Sitemap location
+Sitemap: http://localhost:8080/sitemap.xml

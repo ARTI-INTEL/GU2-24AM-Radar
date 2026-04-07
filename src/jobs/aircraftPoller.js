@@ -12,6 +12,7 @@
 
 import { pool } from "../db.js";
 import { getOpenSkyToken } from "../openskyToken.js";
+import { logInfo, logError } from "../utils/logger.js";
 
 const OPENSKY_BASE = "https://opensky-network.org/api";
 
@@ -132,9 +133,9 @@ export function startAircraftPoller() {
         [trackValues]
       );
 
-      console.log(`Poll OK: ${states.length} aircraft cached at ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()} - ${new Date().getDate()}/${new Date().getMonth() + 1}/${new Date().getFullYear()}`);
+      logInfo(`Aircraft poller: updated ${states.length} aircraft`, "AircraftPoller");
     } catch (e) {
-      console.error("Poll FAILED:", e?.message || e);
+      logError(e, "AircraftPoller");
     }
   }
 

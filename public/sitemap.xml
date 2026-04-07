@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  File: sitemap.xml
+  Project: 24Air Radar
+  Author: Muhammad Faiq Imran
+  Last Modified: 07/04/2026
+
+  Description:
+    XML sitemap listing all publicly accessible pages for search engine crawlers.
+    Authenticated / internal pages are intentionally excluded.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Landing page -->
+  <url>
+    <loc>http://localhost:8080/</loc>
+    <lastmod>2026-03-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Login -->
+  <url>
+    <loc>http://localhost:8080/html/login.html</loc>
+    <lastmod>2026-03-15</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Register -->
+  <url>
+    <loc>http://localhost:8080/html/register.html</loc>
+    <lastmod>2026-03-15</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Forgot Password -->
+  <url>
+    <loc>http://localhost:8080/html/forgotPW.html</loc>
+    <lastmod>2026-03-15</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+</urlset>

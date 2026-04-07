@@ -11,6 +11,7 @@
 //  - mysql2 for database interactions
 
 import { pool } from "../db.js";
+import { logInfo, logError } from "../utils/logger.js";
 
 const POLL_MS = 7 * 60 * 1000; // 7 minutes
 
@@ -60,9 +61,9 @@ async function fetchAndCacheNews() {
       [values]
     );
 
-    console.log(`News cache updated: ${articles.length} articles at ${new Date().toLocaleTimeString()}`);
+    logInfo(`News poller: cached ${articles.length} articles`, "NewsPoller");
   } catch (err) {
-    console.error("News poller failed:", err.message);
+    logError(err, "NewsPoller");
   }
 }
 

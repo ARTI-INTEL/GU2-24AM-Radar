@@ -1,3 +1,7 @@
 .env
 /node_modules
 /src/uploads
+ 
+# Keep the logs folder in version control but ignore generated log files
+/logs/*.log
+!/logs/.gitkeep
