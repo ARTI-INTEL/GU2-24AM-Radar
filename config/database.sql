@@ -1,8 +1,8 @@
-CREATE DATABASE  IF NOT EXISTS `24amradar` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `24amradar`;
+CREATE DATABASE  IF NOT EXISTS `24airradar` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `24airradar`;
 -- MySQL dump 10.13  Distrib 8.0.44, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: 24amradar
+-- Host: 127.0.0.1    Database: 24airradar
 -- ------------------------------------------------------
 -- Server version	8.0.44
 
