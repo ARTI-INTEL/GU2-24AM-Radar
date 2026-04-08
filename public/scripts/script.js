@@ -202,11 +202,24 @@ if (registerForm) {
   });
 }
 
-// ================== LOGOUT ==================
+logoutBtn = document.getElementById("logoutBtn");
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", () => {
+    LogOut();
+  });
+}
+
 function LogOut() {
   clearAuth();
   window.location.href = "login.html";
   showToast("You have been logged out.", "info", 1200);
+}
+
+changePWbtn = document.getElementById("changePWbtn");
+if (changePWbtn) {
+  changePWbtn.addEventListener("click", () => {
+    window.location.href = "changePW.html";
+  });
 }
 
 function getToken() {

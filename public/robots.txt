@@ -24,4 +24,4 @@ Disallow: /uploads/
 Disallow: /health
 
 # Sitemap location
-Sitemap: http://localhost:8080/sitemap.xml
+Sitemap: http://localhost:5500/sitemap.xml
