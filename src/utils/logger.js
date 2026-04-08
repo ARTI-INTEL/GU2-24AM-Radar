@@ -114,8 +114,7 @@ export function requestLogger(req, res, next) {
     // Plain text for the file (no ANSI codes)
     const fileLine  = `[${timestamp()}] [ACCESS] ${method} ${url} ${status} ${ms}ms — ${ip}`;
     const termLine  = `[${timestamp()}] [ACCESS] ${method} ${url} ${statusLabel} ${ms}ms — ${ip}`;
-
-    console.log(termLine);
+    
     writeLine("access.log", fileLine);
 
     // Errors also go to error log
