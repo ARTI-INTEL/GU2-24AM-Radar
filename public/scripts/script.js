@@ -458,3 +458,116 @@ if (avatarInput) {
     avatarInput.value = "";
   });
 }
+
+//LEGAL MODAL (TOS / PRIVACY) 
+
+const TOS_CONTENT = `
+<h3>1. Introduction</h3>
+<p>Welcome to 24Air Radar, a web-based air traffic monitoring application. By accessing or using this application, you agree to comply with and be bound by these Terms of Service. If you do not agree with these terms, you should not use the application.</p>
+<h3>2. Description of the Service</h3>
+<p>24Air Radar is an educational web application that allows users to monitor air traffic using an interactive map interface. The system retrieves aviation data from publicly available APIs and displays aircraft information such as aircraft identifiers, aircraft location, flight information, and air traffic patterns. The service is intended for educational, analytical, and informational purposes only.</p>
+<h3>3. User Accounts</h3>
+<p>To access certain features of the application, users may create an account. When creating an account, users must provide accurate information and keep their login credentials secure. Users must not share their accounts with other individuals. Users are responsible for all activities that occur under their account.</p>
+<h3>4. Acceptable Use</h3>
+<p>Users agree not to use the application to violate any applicable laws or regulations, attempt unauthorized access to the system, disrupt or damage system functionality, or post harmful, offensive, or illegal content in the community section. System administrators reserve the right to remove content or suspend accounts that violate these rules.</p>
+<h3>5. Community Content</h3>
+<p>The application includes a community section where users may create posts, comment on posts, and interact with other users. Users are responsible for any content they publish. The system administrators may remove content that violates community guidelines, contains harmful or inappropriate material, or violates intellectual property rights.</p>
+<h3>6. External Data Sources</h3>
+<p>24Air Radar uses third-party public APIs to retrieve air traffic data. Because the application relies on external data providers, data accuracy cannot be guaranteed. Temporary outages or delays may occur, and aircraft information may not always be up to date.</p>
+<h3>7. Limitation of Liability</h3>
+<p>The information provided by 24Air Radar is for informational and educational purposes only. The developers are not responsible for errors or inaccuracies in flight data, service interruptions caused by third-party APIs, or any damages resulting from the use of the application.</p>
+<h3>8. Service Availability</h3>
+<p>The system may occasionally be unavailable due to maintenance, server issues, or API outages. Continuous or uninterrupted service cannot be guaranteed.</p>
+<h3>9. Changes to the Terms</h3>
+<p>These Terms of Service may be updated or modified when necessary. Users are responsible for reviewing the terms periodically. Continued use of the application indicates acceptance of the updated terms.</p>
+<h3>10. Contact</h3>
+<p>For questions regarding these Terms of Service, users may contact the project developer.</p>
+`;
+
+const PRIVACY_CONTENT = `
+<h3>1. Introduction</h3>
+<p>This Privacy Policy explains how 24Air Radar collects, uses, and protects user information when using the application. User privacy is important, and this policy describes how personal data is handled within the system.</p>
+<h3>2. Information We Collect</h3>
+<p>When using the application, the system may collect certain information. When registering an account, users may provide information such as an email address, username, and password. Passwords are stored securely within the system. If users interact with community features, the system may store posts, comments, uploaded images, and interactions such as likes. The system may also collect limited technical information including browser type, device type, and access timestamps to help improve performance and reliability.</p>
+<h3>3. How Information Is Used</h3>
+<p>Collected information may be used to create and manage user accounts, enable community interactions, maintain system functionality, improve application performance, and diagnose technical issues. Personal data is not sold or shared with third parties for marketing purposes.</p>
+<h3>4. External APIs</h3>
+<p>The application retrieves air traffic data from external public APIs. These third-party services may have their own privacy policies and data practices. 24Air Radar does not control how third-party services process their data.</p>
+<h3>5. Data Security</h3>
+<p>Reasonable security measures are implemented to protect user information. These measures include secure password storage, controlled database access, and protection of API keys on the server side. However, no internet system can be guaranteed to be completely secure.</p>
+<h3>6. Data Retention</h3>
+<p>User information is stored for as long as the account remains active or as required to maintain system functionality. Users may request account deletion where applicable.</p>
+<h3>7. User Rights</h3>
+<p>Users have the right to access their account information, update account details, and request account deletion if they no longer wish to use the service.</p>
+<h3>8. Changes to this Policy</h3>
+<p>This Privacy Policy may be updated periodically to reflect changes in system functionality or improvements. Users are encouraged to review this policy regularly.</p>
+<h3>9. Contact</h3>
+<p>If users have questions about this Privacy Policy, they may contact the project developer.</p>
+`;
+
+function buildLegalModal() {
+  if (document.getElementById("legalModalBackdrop")) return;
+
+  const backdrop = document.createElement("div");
+  backdrop.id = "legalModalBackdrop";
+  backdrop.className = "legal-modal-backdrop";
+  backdrop.innerHTML = `
+    <div class="legal-modal" role="dialog" aria-modal="true">
+      <div class="legal-modal-header">
+        <h2 id="legalModalTitle">Terms of Service</h2>
+        <button class="legal-modal-close" id="legalModalClose" aria-label="Close">&times;</button>
+      </div>
+      <div class="legal-modal-body" id="legalModalBody"></div>
+    </div>
+  `;
+
+  document.body.appendChild(backdrop);
+
+  // Close on backdrop click
+  backdrop.addEventListener("click", (e) => {
+    if (e.target === backdrop) closeLegalModal();
+  });
+
+  // Close button
+  document.getElementById("legalModalClose").addEventListener("click", closeLegalModal);
+
+  // Close on Escape
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeLegalModal();
+  });
+}
+
+function openLegalModal(type) {
+  buildLegalModal();
+  const backdrop = document.getElementById("legalModalBackdrop");
+  const title    = document.getElementById("legalModalTitle");
+  const body     = document.getElementById("legalModalBody");
+
+  if (type === "tos") {
+    title.textContent = "Terms of Service";
+    body.innerHTML = TOS_CONTENT;
+  } else {
+    title.textContent = "Privacy Policy";
+    body.innerHTML = PRIVACY_CONTENT;
+  }
+
+  body.scrollTop = 0;
+  backdrop.classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeLegalModal() {
+  const backdrop = document.getElementById("legalModalBackdrop");
+  if (backdrop) backdrop.classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+// Wire up any .legal-link elements already in the DOM
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll("[data-legal]").forEach((el) => {
+    el.addEventListener("click", (e) => {
+      e.preventDefault();
+      openLegalModal(el.dataset.legal);
+    });
+  });
+});
