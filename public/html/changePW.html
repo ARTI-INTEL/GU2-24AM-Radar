@@ -21,27 +21,32 @@ Description:
   <div class="auth-wrap">
     <form id="changePWForm" class="card" style="width:320px;">
       <div class="card-header"><span>Change Password</span></div>
-
+ 
       <div class="password-wrap">
         <input id="currentPassword" type="password" placeholder="Current Password" required>
         <button type="button" class="toggle-password" data-target="currentPassword">Show</button>
       </div>
-
+ 
       <div class="password-wrap">
         <input id="newPassword" type="password" placeholder="New Password" required>
         <button type="button" class="toggle-password" data-target="newPassword">Show</button>
       </div>
-
+ 
+      <div class="password-wrap">
+        <input id="confirmNewPassword" type="password" placeholder="Confirm New Password" required>
+        <button type="button" class="toggle-password" data-target="confirmNewPassword">Show</button>
+      </div>
+ 
       <p>Password must be at least 6 characters</p>
-
+ 
       <button class="primary-btn" type="submit">Update</button>
-
+ 
       <div class="auth-link">
         <a href="settings.html">Back</a>
       </div>
     </form>
   </div>
-
+ 
   <script src="../scripts/script.js"></script>
 </body>
 </html>
