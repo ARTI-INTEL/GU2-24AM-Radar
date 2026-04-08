@@ -377,16 +377,37 @@ const avatarInput = document.getElementById("avatarInput");
 const avatarImg   = document.getElementById("avatarImg");
 const avatarIcon  = document.getElementById("avatarIcon");
 
-// Show saved profile picture on page load
-function loadAvatar() {
+async function loadAvatar() {
   if (!avatarImg) return;
 
+  // First try the locally cached value (instant, no flicker)
   const user = JSON.parse(localStorage.getItem("authUser") || "{}");
-
   if (user.profilePic) {
     avatarImg.src = `/uploads/${user.profilePic}`;
     avatarImg.style.display = "block";
     if (avatarIcon) avatarIcon.style.display = "none";
+  }
+
+  // Then fetch fresh data from the server to catch any updates
+  try {
+    const res = await fetch(`${API_BASE}/api/user/me`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    });
+    if (!res.ok) return;
+    const data = await res.json();
+
+    if (data.profilePic) {
+      // Update cache so next page load is instant
+      const cached = JSON.parse(localStorage.getItem("authUser") || "{}");
+      cached.profilePic = data.profilePic;
+      localStorage.setItem("authUser", JSON.stringify(cached));
+
+      avatarImg.src = `/uploads/${data.profilePic}`;
+      avatarImg.style.display = "block";
+      if (avatarIcon) avatarIcon.style.display = "none";
+    }
+  } catch {
+    // Network error — silently keep whatever was cached
   }
 }
 

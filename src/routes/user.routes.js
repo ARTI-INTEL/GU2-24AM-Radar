@@ -21,7 +21,7 @@ import { requireAuth } from "../middleware/auth.middleware.js";
 
 export const userRouter = express.Router();
 
-// ─── Multer config for profile pictures ───────────────────────────────────────
+//  Multer config for profile pictures 
 const profileStorage = multer.diskStorage({
   destination: "src/uploads/",
   filename: (req, file, cb) => {
@@ -41,7 +41,7 @@ const uploadAvatar = multer({
   },
 });
 
-// ─── PATCH /api/user/avatar ────────────────────────────────────────────────────
+//  PATCH /api/user/avatar 
 userRouter.patch("/avatar", requireAuth, uploadAvatar.single("avatar"), async (req, res) => {
   try {
     if (!req.file) {
@@ -61,7 +61,7 @@ userRouter.patch("/avatar", requireAuth, uploadAvatar.single("avatar"), async (r
   }
 });
 
-// ─── PATCH /api/user/password ─────────────────────────────────────────────────
+//  PATCH /api/user/password 
 userRouter.patch("/password", requireAuth, async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body ?? {};
@@ -95,3 +95,25 @@ userRouter.patch("/password", requireAuth, async (req, res) => {
     return res.status(500).json({ message: "Server error", error: String(err.message || err) });
   }
 });
+
+// GET /api/user/me
+userRouter.get("/me", requireAuth, async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT `UserID`, `UserEmail`, `Username`, `UserProfile` FROM `user` WHERE `UserID` = ? LIMIT 1",
+      [req.user.userId]
+    );
+    if (!rows.length) return res.status(404).json({ message: "User not found" });
+    const u = rows[0];
+    return res.json({
+      userId: u.UserID,
+      email: u.UserEmail,
+      username: u.Username,
+      profilePic: u.UserProfile || null
+    });
+  } catch (err) {
+    return res.status(500).json({ message: "Server error", error: String(err.message || err) });
+  }
+});
+
+express.Router()

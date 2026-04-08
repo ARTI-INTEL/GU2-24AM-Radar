@@ -21,7 +21,7 @@ import fs   from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
  
-// ─── Resolve /logs directory relative to this file ───────────────────────────
+// Resolve /logs directory relative to this file 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname  = path.dirname(__filename);
  
@@ -33,7 +33,7 @@ if (!fs.existsSync(LOGS_DIR)) {
   fs.mkdirSync(LOGS_DIR, { recursive: true });
 }
  
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+// Helpers
  
 /** Returns today's date string: YYYY-MM-DD */
 function today() {

@@ -35,16 +35,16 @@ import communityRoutes from "./routes/community.routes.js";
 import { startNewsPoller } from "./jobs/newsPoller.js";
 import { logInfo, logError, requestLogger } from "./utils/logger.js";
  
-// ─── Background jobs ──────────────────────────────────────────────────────────
+//  Background jobs 
 startAircraftPoller();
 startNewsPoller();
  
 const app = express();
  
-// ─── HTTP request logger (must be first middleware) ───────────────────────────
+//  HTTP request logger (must be first middleware) 
 app.use(requestLogger);
  
-// ─── Security ─────────────────────────────────────────────────────────────────
+//  Security 
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -79,18 +79,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
  
-// ─── Path helpers ─────────────────────────────────────────────────────────────
+//  Path helpers 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname  = path.dirname(__filename);
  
-// ─── Static file serving ──────────────────────────────────────────────────────
+//  Static file serving 
 app.use("/html",    express.static(path.join(__dirname, "../public/html")));
 app.use("/scripts", express.static(path.join(__dirname, "../public/scripts")));
 app.use("/styles",  express.static(path.join(__dirname, "../public/styles")));
 app.use("/images",  express.static(path.join(__dirname, "../public/images")));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
  
-// ─── SEO / Crawler files ──────────────────────────────────────────────────────
+//  SEO / Crawler files 
  
 // robots.txt — tells crawlers which pages to index / skip
 app.get("/robots.txt", (_req, res) => {
@@ -104,12 +104,12 @@ app.get("/sitemap.xml", (_req, res) => {
   res.sendFile(path.join(__dirname, "../public/sitemap.xml"));
 });
  
-// ─── Root ─────────────────────────────────────────────────────────────────────
+//  Root 
 app.get("/", (_req, res) => {
   res.sendFile(path.join(__dirname, "../public/html/index.html"));
 });
  
-// ─── Health check ─────────────────────────────────────────────────────────────
+//  Health check 
 app.get("/health", async (_req, res) => {
   try {
     await pool.query("SELECT 1");
@@ -120,14 +120,14 @@ app.get("/health", async (_req, res) => {
   }
 });
  
-// ─── API routes ───────────────────────────────────────────────────────────────
+//  API routes 
 app.use("/api/auth",      authRouter);
 app.use("/api/user",      userRouter);
 app.use("/api/airports",  airportsRouter);
 app.use("/api/aircraft",  aircraftRouter);
 app.use("/api/community", communityRoutes);
  
-// ─── Periodic DB cleanup: stale aircraft (older than 5 min) ──────────────────
+//  Periodic DB cleanup: stale aircraft (older than 5 min) 
 setInterval(async () => {
   try {
     const [result] = await pool.query(
@@ -143,7 +143,7 @@ setInterval(async () => {
   }
 }, 15 * 60 * 1000);
  
-// ─── Periodic DB cleanup: past positions (older than 12 h) ───────────────────
+//  Periodic DB cleanup: past positions (older than 12 h) 
 setInterval(async () => {
   try {
     const [result] = await pool.query(
@@ -159,19 +159,19 @@ setInterval(async () => {
   }
 }, 15 * 60 * 1000);
  
-// ─── 404 fallback ─────────────────────────────────────────────────────────────
+//  404 fallback 
 app.use((req, res) => {
   logInfo(`404 — ${req.method} ${req.originalUrl}`, "Router");
   res.status(404).sendFile(path.join(__dirname, "../public/html/404.html"));
 });
  
-// ─── Global error handler ─────────────────────────────────────────────────────
+//  Global error handler 
 app.use((err, req, res, _next) => {
   logError(err, "Express");
   res.status(500).json({ message: "Internal server error" });
 });
  
-// ─── Start ────────────────────────────────────────────────────────────────────
+//  Start 
 const port = Number(process.env.PORT || 8080);
 app.listen(port, () => {
   logInfo(`24Air Radar server running on http://localhost:${port}`, "Server");

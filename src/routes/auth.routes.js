@@ -83,7 +83,7 @@ authRouter.post("/login", async (req, res) => {
     const cleanEmail = String(email).trim().toLowerCase();
 
     const [rows] = await pool.query(
-      "SELECT `UserID`, `UserEmail`, `Username`, `Password` FROM `user` WHERE `UserEmail` = ? LIMIT 1",
+      "SELECT `UserID`, `UserEmail`, `Username`, `Password`, `UserProfile` FROM `user` WHERE `UserEmail` = ? LIMIT 1",
       [cleanEmail]
     );
 
@@ -110,7 +110,8 @@ authRouter.post("/login", async (req, res) => {
       user: {
         userId: user.UserID,
         email: user.UserEmail,
-        username: user.Username
+        username: user.Username,
+        profilePic: user.UserProfile || null
       }
     });
   } catch (err) {
