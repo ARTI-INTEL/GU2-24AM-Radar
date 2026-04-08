@@ -325,7 +325,7 @@ input:checked + .slider:before { transform: translateX(26px); }
     display: none !important;
 }
 
-/* ===== AUTH PAGE LAYOUT (uses existing classes) ===== */
+/*  AUTH PAGE LAYOUT (uses existing classes)  */
 
 .auth-page {
     min-height: 100vh;
@@ -365,7 +365,7 @@ input:checked + .slider:before { transform: translateX(26px); }
 .primary-btn:hover { filter: brightness(1.05); }
 .primary-btn:active { transform: translateY(1px); }
 
-/* ===== Auth Links Row ===== */
+/*  Auth Links Row  */
 
 .auth-link {
   margin-top: 14px;
@@ -387,7 +387,7 @@ input:checked + .slider:before { transform: translateX(26px); }
   opacity: 0.9;
 }
 
-/* ===== Settings page additions (paste at bottom of your existing CSS) ===== */
+/*  Settings page additions (paste at bottom of your existing CSS)  */
 
 /* Big rounded panel like your screenshot */
 .settings-panel{
@@ -503,9 +503,9 @@ input:checked + .slider:before { transform: translateX(26px); }
   }
 }
 
-/* =========================================================
+/* 
    REMOVE DEFAULT LEAFLET POPUP BLACK BACKGROUND
-   ========================================================= */
+    */
 
 /* Remove outer popup container */
 .airport-popup-theme,
@@ -534,9 +534,9 @@ input:checked + .slider:before { transform: translateX(26px); }
     display: none !important;
 }
 
-/* =========================================================
+/* 
    AIRPORT POPUP STYLE
-   ========================================================= */
+    */
 
 .airport-popup-card {
     background: var(--card-color-inverted);
@@ -559,9 +559,9 @@ input:checked + .slider:before { transform: translateX(26px); }
     font-size: 11px;
 }
 
-/* =========================================================
+/* 
    AIRCRAFT POPUP STYLE
-   ========================================================= */
+    */
 
 .aircraft-popup-card {
     background: var(--card-color-inverted);
@@ -582,9 +582,9 @@ input:checked + .slider:before { transform: translateX(26px); }
     line-height: 1.4;
 }
 
-/* =========================================================
+/* 
    PLANE ICON
-   ========================================================= */
+    */
 
 .plane-icon {
     width: 30px;
@@ -594,7 +594,7 @@ input:checked + .slider:before { transform: translateX(26px); }
     filter: drop-shadow(0 6px 10px rgba(255,255,255,0.5));
 }
 
-/* ===== Mobile Sidebar Drawer ===== */
+/*  Mobile Sidebar Drawer  */
 
 /* Hamburger button (hidden on desktop) */
 .menu-btn{
@@ -699,9 +699,9 @@ input:checked + .slider:before { transform: translateX(26px); }
     color: #ffffff;
 }
 
-/* ===============================
+/* 
    TOAST POPUPS (top-right)
-=============================== */
+ */
 .toast-container {
     position: fixed;
     top: 20px;
@@ -1063,9 +1063,9 @@ input:checked + .slider:before { transform: translateX(26px); }
     }
 }
 
-/* ===============================
+/* 
    LOCATE ME MAP BUTTON
-=============================== */
+ */
 .locate-me-btn {
   width: 36px;
   height: 36px;
@@ -1095,9 +1095,9 @@ input:checked + .slider:before { transform: translateX(26px); }
   to   { transform: rotate(360deg); }
 }
 
-/* ===============================
+/* 
    SETTINGS AVATAR UPLOAD
-=============================== */
+ */
 .settings-avatar {
   position: relative;
   cursor: pointer;

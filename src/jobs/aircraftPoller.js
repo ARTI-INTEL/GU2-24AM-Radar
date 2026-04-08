@@ -65,9 +65,9 @@ export function startAircraftPoller() {
 
       if (!states.length) return;
 
-      // =========================
+      
       // 1) Upsert latest aircraft
-      // =========================
+      
       const values = states.map((a) => [
         a.icao24,
         a.callsign,
@@ -113,10 +113,9 @@ export function startAircraftPoller() {
         [values]
       );
 
-      // =========================
+
       // 2) Insert track positions
       // (only: icao, time, lat, lon)
-      // =========================
       const trackValues = states.map((a) => [
         a.icao24,
         // optional: use OpenSky last_contact if available (seconds -> ms)

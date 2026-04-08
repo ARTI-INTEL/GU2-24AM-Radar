@@ -159,9 +159,7 @@ weatherToggle.addEventListener("change", function () {
 map.on("drag", () => map.panInsideBounds(worldBounds, { animate: false }));
 map.on("zoomend", () => map.panInsideBounds(worldBounds, { animate: false }));
 
-// ===============================
 // SAVE MAP POSITION ON MOVE
-// ===============================
 map.on("moveend", () => {
   const c = map.getCenter();
   localStorage.setItem("mapLastPos", JSON.stringify({
@@ -171,7 +169,7 @@ map.on("moveend", () => {
   }));
 });
 
-// --- Airports Layer ---
+//  Airports Layer 
 const airportToggle = document.getElementById("airportToggle");
 const airportsLayer = L.layerGroup().addTo(map);
 
@@ -249,7 +247,7 @@ airportToggle.addEventListener("change", () => {
 
 loadAirportsInView();
 
-// --- Aircraft Layer ---
+//  Aircraft Layer 
 const aircraftToggle = document.getElementById("aircraftToggle");
 const aircraftLayer = L.layerGroup().addTo(map);
 
@@ -276,9 +274,7 @@ function makePlaneDivIcon(deg = 0) {
   });
 }
 
-// ===============================
 // FILTERS (Squawk exact, Altitude min ft, Speed min kt)
-// ===============================
 function getFilterValues() {
   const category = document.getElementById("choices")?.value || "0";
   const squawk = (document.getElementById("sqwak")?.value || "").trim();
@@ -433,9 +429,7 @@ loadAircraftInView();
   el.addEventListener(evt, () => loadAircraftInView());
 });
 
-// ===============================
 // SEARCH (Aircraft + Airports)
-// ===============================
 const searchInput = document.getElementById("sidebarSearch");
 const resultsWrap = document.getElementById("searchResultsWrap");
 const sidebarCards = document.querySelectorAll(".sidebar-card");
@@ -620,7 +614,7 @@ if (searchInput && resultsWrap) {
   });
 }
 
-// ===== Mobile sidebar toggle =====
+// = Mobile sidebar toggle =
 const menuBtn = document.getElementById("menuBtn");
 const sidebar = document.getElementById("sidebar");
 const overlay = document.getElementById("sidebarOverlay");
@@ -759,9 +753,7 @@ map.on("click", () => {
   }
 });
 
-// ===============================
 // LOCATE ME BUTTON
-// ===============================
 const LocateMeControl = L.Control.extend({
   options: { position: "topright" },
 

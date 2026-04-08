@@ -44,7 +44,7 @@ mobileQuery.addEventListener("change", updateBackButtons);
  
  
  
-// ================== SHOW / HIDE PASSWORD ==================
+// SHOW / HIDE PASSWORD
 function setupPasswordToggles() {
   const toggleButtons = document.querySelectorAll(".toggle-password");
  
@@ -68,7 +68,7 @@ function setupPasswordToggles() {
  
 document.addEventListener("DOMContentLoaded", setupPasswordToggles);
  
-// ================== TOAST POPUPS ==================
+// TOAST POPUPS
 function getToastContainer() {
   let container = document.getElementById("toastContainer");
  
@@ -111,10 +111,10 @@ if (protectedPages.some(p => window.location.pathname.includes(p))) {
 }
  
 // Frontend to Backend Connection
-// ================== CONFIG ==================
+// CONFIG
 const API_BASE = "";
  
-// ================== SAVE AUTH ==================
+// SAVE AUTH
 function saveAuth(token, user) {
   localStorage.setItem("authToken", token);
   localStorage.setItem("authUser", JSON.stringify(user));
@@ -125,7 +125,7 @@ function clearAuth() {
   localStorage.removeItem("authUser");
 }
  
-// ================== LOGIN ==================
+// LOGIN
 const loginForm = document.getElementById("loginForm");
  
 if (loginForm) {
@@ -164,7 +164,7 @@ if (loginForm) {
   });
 }
  
-// ================== REGISTER ==================
+// REGISTER
 const registerForm = document.getElementById("registerForm");
  
 if (registerForm) {
@@ -238,7 +238,7 @@ function setMsg(el, text, color = "white") {
   el.style.color = color;
 }
  
-// ================== CHANGE PASSWORD ==================
+// CHANGE PASSWORD
 const changePWForm = document.getElementById("changePWForm");
  
 if (changePWForm) {
@@ -282,7 +282,6 @@ if (changePWForm) {
 }
  
 // Dynamic Welcome Text in Settings
-// ================== DYNAMIC WELCOME ==================
 const welcomeText = document.getElementById("welcomeText");
  
 if (welcomeText) {
@@ -295,7 +294,7 @@ if (welcomeText) {
   }
 }
  
-// ================== FORGOT PASSWORD ==================
+// FORGOT PASSWORD
 const forgotPWForm = document.getElementById("forgotPWForm");
  
 if (forgotPWForm) {
@@ -384,7 +383,7 @@ if (resetPWForm) {
   });
 }
  
-// ================== PROFILE PICTURE ==================
+// PROFILE PICTURE
 const avatarWrap  = document.getElementById("avatarWrap");
 const avatarInput = document.getElementById("avatarInput");
 const avatarImg   = document.getElementById("avatarImg");
