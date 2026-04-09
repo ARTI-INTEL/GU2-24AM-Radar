@@ -217,39 +217,8 @@ async function loadComments(postId) {
     console.error("Error loading comments:", err);
   }
 }
- 
-/* LOAD NEWS */
- 
-async function loadNews() {
-  try {
-    const res = await fetch(`${API_BASE}/api/community/news`);
-    const articles = await res.json();
- 
-    const newsContainer = document.getElementById("news");
-    newsContainer.innerHTML = "";
- 
-    if (!Array.isArray(articles) || articles.length === 0) {
-      newsContainer.innerHTML = "<p>News unavailable.</p>";
-      return;
-    }
- 
-    articles.forEach(article => {
-      const item = document.createElement("div");
-      item.className = "news-item";
-      item.innerHTML = `
-        <b>${article.title || "No title"}</b><br>
-      `;
-      newsContainer.appendChild(item);
-    });
- 
-  } catch (err) {
-    console.error("News failed:", err);
-    document.getElementById("news").innerHTML = "<p>News unavailable.</p>";
-  }
-}
- 
+
 /* INITIAL LOAD */
- 
 loadPosts();
-loadNews();
+
  

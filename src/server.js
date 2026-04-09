@@ -32,12 +32,10 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { startAircraftPoller } from "./jobs/aircraftPoller.js";
 import communityRoutes from "./routes/community.routes.js";
-import { startNewsPoller } from "./jobs/newsPoller.js";
 import { logInfo, logError, requestLogger } from "./utils/logger.js";
  
 //  Background jobs 
 startAircraftPoller();
-startNewsPoller();
  
 const app = express();
  

@@ -126,23 +126,4 @@ router.get("/comments/:postId", async (req, res) => {
 
 });
 
-/* GET AVIATION NEWS */
-
-router.get("/news", async (req, res) => {
-  try {
-    const [rows] = await pool.query(
-      "SELECT title, url FROM news_cache ORDER BY fetched_at DESC LIMIT 5"
-    );
-
-    if (!rows.length) {
-      return res.json([]);
-    }
-
-    res.json(rows);
-  } catch (err) {
-    console.error("News route failed:", err.message);
-    res.status(500).json({ error: "Failed to fetch news" });
-  }
-});
-
 export default router;

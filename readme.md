@@ -3,8 +3,6 @@
 24Air Radar is a web-based aircraft tracking system that displays live air traffic on an interactive world map.
 The system retrieves aircraft position data from the OpenSky Network API and visualizes it using Leaflet.js.
 
-This project was developed as part of the **HT8C 48 Software Development – Graded Unit 2 (GU2)** assessment.
-
 ---
 
 # Project Overview
@@ -62,7 +60,7 @@ MySQL
 OpenSky Network API
 Terminator Daynight Map API
 Openweather Weather Map API
-apitube News API
+
 
 ---
 
@@ -76,7 +74,7 @@ A modern web browser (Chrome, Edge, Firefox)
 
 ---
 
-# Installation
+# Installation and Run
 
 ## 1. Clone the Repository
 
@@ -114,8 +112,6 @@ JWT_EXPIRES_IN=7d
 
 OPENSKY_CLIENT_ID=your api details here
 OPENSKY_CLIENT_SECRET=your api details here
-
-NEWS_API_KEY=your api details here
 
 CORS_ORIGIN=http://127.0.0.1:(your port)
 
@@ -157,12 +153,18 @@ npm run dev
 
 ---
 
-## 6. Launch the Frontend
+## 6. Open the Frontend
 
-Click the link provided in the IDE Terminal
+Click the link provided in the Terminal
 
 24Air Radar Server Running on http://localhost:5500 (click this link)
 ---
+
+## 7. Shutdown the Server
+
+When your done you can then shut down the server.
+
+Go into the Terminal and click Ctrl + C.
 
 # Project Structure
 
@@ -219,7 +221,6 @@ Click the link provided in the IDE Terminal
     │   
     ├───jobs
     │       aircraftPoller.js
-    │       newsPoller.js
     │       
     ├───middleware
     │       auth.middleware.js
@@ -283,12 +284,6 @@ Click the link provided in the IDE Terminal
 │       user_id
 │       comment
 │       created_at
-│
-├───news_cache
-│       id (PK)
-│       title
-│       url
-│       fetched_at
 │
 ├───password_resets
 │       id (PK)
@@ -370,9 +365,6 @@ Adds a comment to a post. Body: { post_id, user_id, comment }
 
 GET /api/community/comments/:postId
 Returns all comments for a specific post.
-
-GET /api/community/news
-Returns the latest cached aviation news articles.
 
 ## System
 GET /health

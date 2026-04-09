@@ -101,22 +101,6 @@ CREATE TABLE `comments` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `news_cache`
---
-
-DROP TABLE IF EXISTS `news_cache`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `news_cache` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `title` varchar(512) NOT NULL,
-  `url` varchar(1024) NOT NULL,
-  `fetched_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `password_resets`
 --
 
