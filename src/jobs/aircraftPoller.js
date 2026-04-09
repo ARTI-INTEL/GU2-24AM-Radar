@@ -1,7 +1,7 @@
 // File: aircraftPoller.js
 // Project: 24Air Radar
 // Author: Muhammad Faiq Imran
-// Last Modified: 15/03/2026
+// 
 
 // Description:
 //   This file implements a background job that periodically polls the OpenSky Network API for live aircraft data.

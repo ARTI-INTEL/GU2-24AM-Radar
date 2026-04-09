@@ -2,7 +2,7 @@
 File: map.js
 Project: 24Air Radar
 Author: Muhammad Faiq Imran
-Last Modified: 15/03/2026
+
 
 Description:
   This file contains the JavaScript code for the 24Air Radar application, handling map initialization, 

@@ -2,7 +2,7 @@
 File: community.js
 Project: 24Air Radar
 Author: Muhammad Faiq Imran
-Last Modified: 07/04/2026
+
  
 Description:
   This file contains the JavaScript code for the 24Air Radar application community page, handling user interactions, 
